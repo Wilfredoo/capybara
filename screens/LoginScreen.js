@@ -51,7 +51,7 @@ handleLogin = () => {
       <Text style={{color: "#FFF", fontWeight: "500"}}> Sign In </Text>
   </TouchableOpacity>
 
-  <TouchableOpacity style={{alignSelf: "center", marginTop: 32}}>
+  <TouchableOpacity style={{alignSelf: "center", marginTop: 32}} onPress={() => this.props.navigation.navigate("Register")}>
       <Text style={{color: "#414959", fontSize: 13}}> First Timer?<Text style={{fontWeight: 500, color: "#E9446A"}}> Sign Up</Text> then </Text>
   </TouchableOpacity>
 
