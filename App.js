@@ -1,33 +1,90 @@
-import {createAppContainer, createSwitchNavigator} from 'react-navigation'
-import {createStackNavigator} from 'react-navigation-stack'
-import LoadingScreen from './screens/LoadingScreen'
-import LoginScreen from './screens/LoginScreen'
-import RegisterScreen from './screens/RegisterScreen'
-import HomeScreen from './screens/HomeScreen'
+import React from "react";
+import Loading from './screens/Loading'
+import Login from './screens/Login'
+import Register from './screens/Register'
+import Profile from './screens/Profile'
+import Home from './screens/Home'
 import firebaseConfig from './config/FirebaseConfig'
 import * as firebase from 'firebase';
+import { createBottomTabNavigator } from "react-navigation-tabs";
+import { createSwitchNavigator, createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import {  FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
 
- // Your web app's Firebase configuration
-
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-
-
-const AppStack = createStackNavigator({
-  Home: HomeScreen
-})
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
  
 const AuthStack = createStackNavigator({
-  Login: LoginScreen,
-  Register: RegisterScreen
+  Login: Login,
+  Register: Register
 })
 
+const DashboardTabNavigator = createBottomTabNavigator(
+  {
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: "Profile",
+        tabBarLabel: "Profile",
+        tabBarIcon: ({ tintColor }) => (
+          <AntDesign name="meho" size={20} color={tintColor} />
+        ),
+        tabBarOptions: {
+          activeTintColor: "#E9446A",
+          inactiveTintColor: "gray"
+        }
+      }
+    },
+
+    Main: {
+      screen: Home,
+      navigationOptions: {
+        tabBarLabel: "Main",
+        tabBarIcon: ({ tintColor }) => (
+          <FontAwesome5 name="wine-bottle" size={20} color={tintColor} />
+        ),
+        tabBarOptions: {
+          activeTintColor: "#E9446A",
+          inactiveTintColor: "gray"
+        }
+      }
+    },
+    Messages: {
+      screen: Profile,
+      headerTitle: "aaa",
+      navigationOptions: {
+        tabBarLabel: "Messages",
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="md-paper" size={20} color={tintColor} />
+        ),
+        tabBarOptions: {
+          activeTintColor: "#E9446A",
+          inactiveTintColor: "gray"
+        }
+      }
+    }
+  },
+
+  {
+    initialRouteName: "Main",
+    navigationOptions: ({ navigation }) => {
+      const { routeName } = navigation.state.routes[navigation.state.index];
+      return {
+        headerTitle: routeName
+      };
+    }
+  },
+  {}
+);
+
+
 export default createAppContainer(
-  createStackNavigator(
+  createSwitchNavigator(
     {
-      Loading: LoadingScreen,
-      App: AppStack,
+      Loading: Loading,
+      App: DashboardTabNavigator,
       Auth: AuthStack
     },
     {
@@ -35,3 +92,4 @@ export default createAppContainer(
     }
   )
 )
+

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 
-export default class LoginScreen extends Component {
+export default class Login extends Component {
 
 state = {
   email: "",
@@ -22,7 +22,7 @@ handleLogin = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.greeting}> 
-        {`Wassup, hot stuff`}
+        {`What's up, hot stuff`}
          </Text>
 
 
@@ -52,7 +52,7 @@ handleLogin = () => {
   </TouchableOpacity>
 
   <TouchableOpacity style={{alignSelf: "center", marginTop: 32}} onPress={() => this.props.navigation.navigate("Register")}>
-      <Text style={{color: "#414959", fontSize: 13}}> First Timer?<Text style={{fontWeight: 500, color: "#E9446A"}}> Sign Up</Text> then </Text>
+      <Text style={{color: "#414959", fontSize: 13}}> First Timer?<Text style={{fontWeight: '500', color: "#E9446A"}}> Sign Up</Text> then </Text>
   </TouchableOpacity>
 
 

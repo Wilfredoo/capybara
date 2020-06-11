@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 
-export default class RegisterScreen extends Component {
+export default class Register extends Component {
 
 state = {
   name: "",
@@ -13,7 +13,6 @@ state = {
 }
 
 handleRegister = () => {
-
   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(userCredentials => {
     return userCredentials.user.updateProfile({
       displayName: this.state.name
@@ -27,9 +26,6 @@ handleRegister = () => {
         <Text style={styles.greeting}> 
         {`Ahoy Newcomer`}
          </Text>
-
-
-
          <View style={styles.errorMessage}>
           {this.state.errorMessage && 
           <Text style={styles.error}> 
@@ -59,8 +55,8 @@ handleRegister = () => {
       <Text style={{color: "#FFF", fontWeight: "500"}}> Sign Up </Text>
   </TouchableOpacity>
 
-  <TouchableOpacity style={{alignSelf: "center", marginTop: 32}}>
-      <Text style={{color: "#414959", fontSize: 13}}> Have an account?<Text style={{fontWeight: 500, color: "#E9446A"}}> Log In</Text> sister </Text>
+  <TouchableOpacity style={{alignSelf: "center", marginTop: 32}} onPress={() => this.props.navigation.navigate("Login")}>
+      <Text style={{color: "#414959", fontSize: 13}}> Have an account?<Text style={{fontWeight: 500, color: "#E9446A"}}> Log In</Text> pumpkin </Text>
   </TouchableOpacity>
 
 

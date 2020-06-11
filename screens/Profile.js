@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as firebase from 'firebase';
 
 
-export default class HomeScreen extends Component {
+export default class Profile extends Component {
 state = {
   email: "",
   displayName: ""
@@ -21,9 +21,9 @@ signOutUser = () => {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Hi... {this.state.displayName}?  </Text>
+        <Text>Hi... {this.state.displayName} </Text>
 
-        <TouchableOpacity style={{marginTop: 32}}><Text>Log Out</Text></TouchableOpacity>
+        <TouchableOpacity style={{marginTop: 32}} onPress={() => this.signOutUser()}><Text>Log Out</Text></TouchableOpacity>
       </View>
     );
   }
