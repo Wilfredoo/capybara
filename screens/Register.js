@@ -13,7 +13,13 @@ state = {
 }
 
 handleRegister = () => {
+  firebase.firestore().collection("users").doc().set({
+    email: this.state.email,
+    password: this.state.password,
+    name: this.state.name
+  })
   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(userCredentials => {
+    
     return userCredentials.user.updateProfile({
       displayName: this.state.name
     })
@@ -56,7 +62,7 @@ handleRegister = () => {
   </TouchableOpacity>
 
   <TouchableOpacity style={{alignSelf: "center", marginTop: 32}} onPress={() => this.props.navigation.navigate("Login")}>
-      <Text style={{color: "#414959", fontSize: 13}}> Have an account?<Text style={{fontWeight: 500, color: "#E9446A"}}> Log In</Text> pumpkin </Text>
+      <Text style={{color: "#414959", fontSize: 13}}> Have an account? Then<Text style={{fontWeight: 500, color: "#E9446A"}}> log in</Text> pumpkin </Text>
   </TouchableOpacity>
 
 

@@ -6,13 +6,31 @@ export default function Home() {
   const [message, setMessage] = useState('');
   useEffect(() => console.log(message), [message]);
 
-  const dbh = firebase.firestore();
+  const currentUser = firebase.auth().currentUser
+  const store = firebase.firestore();
 
-  const sendMessage = () => {
-    console.log("message to send", message)
-    dbh.collection("chatRooms").doc("test").set({
-      message: message,
+
+
+  const sendMessage = async () => {
+
+   const users = await store.collection("users")
+    .get()
+    .then(querySnapshot => {
+      console.log("query snapshot", querySnapshot)
+        querySnapshot.forEach(snapshot => {
+          console.log("snapshot data", snapshot.data())
+            // console.log(doc.id, " => ", doc.data());
+        });
     })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+console.log("list of users", users)
+
+    // store.collection("chatRooms").doc('chat_' + currentUser.uid + "_" + randomUser).set({
+    //   message: message,
+    // })
   }
   
   return (
