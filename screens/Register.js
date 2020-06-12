@@ -12,18 +12,21 @@ state = {
   errorMessage: null 
 }
 
-handleRegister = () => {
-  firebase.firestore().collection("users").doc().set({
-    email: this.state.email,
-    password: this.state.password,
-    name: this.state.name
-  })
+handleRegister = async () => {
+ 
   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(userCredentials => {
-    
+    console.log("user crdentials", userCredentials)
+    firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
+      email: this.state.email,
+      password: this.state.password,
+      name: this.state.name
+    })
     return userCredentials.user.updateProfile({
       displayName: this.state.name
     })
   }).catch(error => this.setState({errorMessage: error.message}))
+
+  
 }
 
   render() {

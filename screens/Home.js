@@ -5,32 +5,28 @@ import * as firebase from 'firebase';
 export default function Home() {
   const [message, setMessage] = useState('');
   useEffect(() => console.log(message), [message]);
-
   const currentUser = firebase.auth().currentUser
   const store = firebase.firestore();
 
-
-
   const sendMessage = async () => {
-
-   const users = await store.collection("users")
+    let users
+  let randomUser
+   await store.collection("users")
     .get()
     .then(querySnapshot => {
-      console.log("query snapshot", querySnapshot)
-        querySnapshot.forEach(snapshot => {
-          console.log("snapshot data", snapshot.data())
-            // console.log(doc.id, " => ", doc.data());
-        });
+      console.log("query snapshot", querySnapshot.docs)
+     users = querySnapshot.docs
+      randomUser = users[Math.floor(Math.random() * users.length)].id;
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
 
-console.log("list of users", users)
-
-    // store.collection("chatRooms").doc('chat_' + currentUser.uid + "_" + randomUser).set({
-    //   message: message,
-    // })
+    store.collection("chatRooms").doc('chat_' + currentUser.uid + "_" + randomUser).set({
+      message,
+      to: randomUser,
+      from: currentUser.uid
+    })
   }
   
   return (
