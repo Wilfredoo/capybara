@@ -2,6 +2,7 @@ import React from "react";
 import Loading from './screens/Loading'
 import Login from './screens/Login'
 import Register from './screens/Register'
+import History from './screens/History'
 import Profile from './screens/Profile'
 import Home from './screens/Home'
 import firebaseConfig from './config/FirebaseConfig'
@@ -51,11 +52,11 @@ const DashboardTabNavigator = createBottomTabNavigator(
         }
       }
     },
-    Messages: {
-      screen: Profile,
-      headerTitle: "aaa",
+    History: {
+      screen: History,
+      headerTitle: "History",
       navigationOptions: {
-        tabBarLabel: "Messages",
+        tabBarLabel: "History",
         tabBarIcon: ({ tintColor }) => (
           <Ionicons name="md-paper" size={20} color={tintColor} />
         ),
