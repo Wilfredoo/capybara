@@ -41,27 +41,28 @@ export default function History() {
 
 	return (
 		<View style={styles.container}>
-			{/* <Header /> */}
-			<Text style={{ marginBottom: 30 }}>Your History here</Text>
-			<ScrollView style={styles.historyUnit}>
+			<Header />
+			<View style={styles.historyView}>
+			<ScrollView >
 				{console.log("array length", messagesArray)}
 				{messagesArray &&
 					messagesArray.map(data => {
 						return (
-							<>
+							<View style={styles.historyUnit}>
 								<Text>{data.message}</Text>
 								<View style={styles.flex}>
-									<Text>{moment(data.time).fromNow()}</Text>
+									<Text style={{color: "gray"}}>{moment(data.time).fromNow()}</Text>
 									{data.from === currentUser ? (
 										<Feather name="arrow-up-right" size={30} color="pink" />
 									) : (
 										<Feather name="arrow-down-left" size={30} color="pink" />
 									)}
 								</View>
-							</>
+							</View>
 						);
 					})}
 			</ScrollView>
+			</View>
 		</View>
 	);
 }
@@ -69,18 +70,21 @@ export default function History() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// justifyContent: "center",
-		// alignItems: "center",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	historyView: {
-		// paddingTop: 22,
-		// margin: 30,
+		width: 300,
+		marginTop: 10,
+		position: "absolute",
+		top: 80
 	},
 	flex: {
 		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "space-between"
 	},
-	historyUnit: {
+	historyUnit: {	
 		marginTop: 15,
 		marginBottom: 15,
 		borderBottomWidth: 0.5,
