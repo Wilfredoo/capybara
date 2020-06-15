@@ -8,8 +8,10 @@ import {
 	Image,
 } from "react-native";
 import * as firebase from "firebase";
+import Header from './Header'
+const short = require('short-uuid');
 
-export default function Home() {
+export default function Home({ navigation }) {
 	const [message, setMessage] = useState("");
 	useEffect(() => console.log(message), [message]);
 	const currentUser = firebase.auth().currentUser.uid;
@@ -18,8 +20,7 @@ export default function Home() {
 	const sendMessage = async () => {
 		let users;
 		let randomUser;
-		let me;
-		let indexe = "s";
+		let indexe;
 
 		await store
 			.collection("users")
@@ -28,9 +29,9 @@ export default function Home() {
 				users = querySnapshot.docs;
 				users.map((data, index) => {
 					if (data.id === currentUser) {
-						indexe = index
-					} 
-				})
+						indexe = index;
+					}
+				});
 				if (indexe !== -1) users.splice(indexe, 1);
 				randomUser = users[Math.floor(Math.random() * users.length)].id;
 			})
@@ -40,22 +41,22 @@ export default function Home() {
 
 		store
 			.collection("chatRooms")
-			.doc("chat_" + currentUser + "_" + randomUser)
+			.doc(short.generate())
 			.set({
 				message,
 				to: randomUser,
 				from: currentUser,
-				time: Date.now()
+				time: Date.now(),
 			});
+
+		navigation.navigate("Sent", {
+			message: message,
+		});
 	};
 
 	return (
 		<View style={styles.container}>
-			<Text style={{ marginBottom: 30 }}>Message in a bottle</Text>
-			<Image
-				style={{ width: 50, height: 50 }}
-				source={require("../assets/splash.png")}
-			/>
+			<Header />
 			<TextInput
 				multiline={true}
 				numberOfLines={4}
@@ -89,6 +90,8 @@ const styles = StyleSheet.create({
 		color: "#161F3D",
 		borderRadius: 5,
 		textAlignVertical: "top",
+		paddingLeft: 10,
+		paddingTop: 10,
 	},
 	button: {
 		marginHorizontal: 30,
@@ -100,5 +103,5 @@ const styles = StyleSheet.create({
 		margin: 30,
 		paddingLeft: 30,
 		paddingRight: 30,
-	},
+	}
 });

@@ -4,6 +4,7 @@ import * as firebase from "firebase";
 import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { Feather } from "@expo/vector-icons";
+import Header from "./Header";
 
 export default function History() {
 	const currentUser = firebase.auth().currentUser.uid;
@@ -40,31 +41,27 @@ export default function History() {
 
 	return (
 		<View style={styles.container}>
+			{/* <Header /> */}
 			<Text style={{ marginBottom: 30 }}>Your History here</Text>
-			{messagesArray &&
-				messagesArray.map(data => {
-					{
-						console.log("data from", data.from);
-					}
-					{
-						console.log("currentuser", currentUser);
-					}
-
-					return (
-						<>
-
-							<Text>{data.message}</Text>
-							<Text>{moment(data.time).fromNow()}</Text>
-							{data.from === currentUser ? (
-								<Feather name="arrow-up-right" size={30} color="pink" />
-							) : (
-								<Feather name="arrow-down-left" size={30} color="pink" />
-							)}
-						
-						</>
-					);
-				})}
-			<ScrollView></ScrollView>
+			<ScrollView style={styles.historyUnit}>
+				{console.log("array length", messagesArray)}
+				{messagesArray &&
+					messagesArray.map(data => {
+						return (
+							<>
+								<Text>{data.message}</Text>
+								<View style={styles.flex}>
+									<Text>{moment(data.time).fromNow()}</Text>
+									{data.from === currentUser ? (
+										<Feather name="arrow-up-right" size={30} color="pink" />
+									) : (
+										<Feather name="arrow-down-left" size={30} color="pink" />
+									)}
+								</View>
+							</>
+						);
+					})}
+			</ScrollView>
 		</View>
 	);
 }
@@ -72,7 +69,21 @@ export default function History() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: "center",
+		// justifyContent: "center",
+		// alignItems: "center",
+	},
+	historyView: {
+		// paddingTop: 22,
+		// margin: 30,
+	},
+	flex: {
+		flexDirection: "row",
 		alignItems: "center",
+	},
+	historyUnit: {
+		marginTop: 15,
+		marginBottom: 15,
+		borderBottomWidth: 0.5,
+		borderBottomColor: "#7d90a0",
 	},
 });

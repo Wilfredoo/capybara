@@ -4,6 +4,7 @@ import Login from './screens/Login'
 import Register from './screens/Register'
 import History from './screens/History'
 import Profile from './screens/Profile'
+import SentConfirmation from './screens/SentConfirmation'
 import Home from './screens/Home'
 import firebaseConfig from './config/FirebaseConfig'
 import * as firebase from 'firebase';
@@ -21,6 +22,7 @@ const AuthStack = createStackNavigator({
   Login: Login,
   Register: Register
 })
+
 
 const DashboardTabNavigator = createBottomTabNavigator(
   {
@@ -67,7 +69,6 @@ const DashboardTabNavigator = createBottomTabNavigator(
       }
     }
   },
-
   {
     initialRouteName: "Main",
     navigationOptions: ({ navigation }) => {
@@ -86,7 +87,8 @@ export default createAppContainer(
     {
       Loading: Loading,
       App: DashboardTabNavigator,
-      Auth: AuthStack
+      Auth: AuthStack,
+      Sent: SentConfirmation
     },
     {
       initialRouteName: "Loading"

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from "firebase";
+import Header from './Header'
+
 
 export default class Profile extends Component {
 	state = {
@@ -20,6 +22,8 @@ export default class Profile extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
+			<Header />
+
 				<Text>Hi... {this.state.displayName} </Text>
 
 				<TouchableOpacity
