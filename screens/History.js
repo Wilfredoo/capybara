@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from "react";
-import {
-	Text,
-	View,
-	StyleSheet,
-	TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from "firebase";
 import { ScrollView } from "react-native-gesture-handler";
+import moment from "moment";
+import { Feather } from "@expo/vector-icons";
 
 export default function History() {
-	const currentUser = firebase.auth().currentUser;
+	const currentUser = firebase.auth().currentUser.uid;
 	const store = firebase.firestore();
 	const [messagesArray, setMessagesArray] = useState([]);
 
 	useEffect(() => {
 		getAllMessages().then(result => {
 			result.forEach(docSnapshot => {
-				setMessagesArray(oldMessagesArray => [...oldMessagesArray, docSnapshot.data()]);
-
+				setMessagesArray(oldMessagesArray => [
+					...oldMessagesArray,
+					docSnapshot.data(),
+				]);
 			});
 		});
 	}, []);
@@ -25,12 +24,8 @@ export default function History() {
 	const chatRoomsRef = store.collection("chatRooms");
 
 	async function getAllMessages() {
-		const sentMessages = chatRoomsRef
-			.where("from", "==", currentUser.uid)
-			.get();
-		const receivedMessages = chatRoomsRef
-			.where("to", "==", currentUser.uid)
-			.get();
+		const sentMessages = chatRoomsRef.where("from", "==", currentUser).get();
+		const receivedMessages = chatRoomsRef.where("to", "==", currentUser).get();
 
 		const [sentSnapshot, receivedSnapshot] = await Promise.all([
 			sentMessages,
@@ -43,14 +38,33 @@ export default function History() {
 		return messagesArray;
 	}
 
-
 	return (
 		<View style={styles.container}>
-			{console.log("the array", messagesArray)}
-
 			<Text style={{ marginBottom: 30 }}>Your History here</Text>
-			<ScrollView>
-			</ScrollView>
+			{messagesArray &&
+				messagesArray.map(data => {
+					{
+						console.log("data from", data.from);
+					}
+					{
+						console.log("currentuser", currentUser);
+					}
+
+					return (
+						<>
+
+							<Text>{data.message}</Text>
+							<Text>{moment(data.time).fromNow()}</Text>
+							{data.from === currentUser ? (
+								<Feather name="arrow-up-right" size={30} color="pink" />
+							) : (
+								<Feather name="arrow-down-left" size={30} color="pink" />
+							)}
+						
+						</>
+					);
+				})}
+			<ScrollView></ScrollView>
 		</View>
 	);
 }

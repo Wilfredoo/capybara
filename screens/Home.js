@@ -12,17 +12,26 @@ import * as firebase from "firebase";
 export default function Home() {
 	const [message, setMessage] = useState("");
 	useEffect(() => console.log(message), [message]);
-	const currentUser = firebase.auth().currentUser;
+	const currentUser = firebase.auth().currentUser.uid;
 	const store = firebase.firestore();
 
 	const sendMessage = async () => {
 		let users;
 		let randomUser;
+		let me;
+		let indexe = "s";
+
 		await store
 			.collection("users")
 			.get()
 			.then(querySnapshot => {
 				users = querySnapshot.docs;
+				users.map((data, index) => {
+					if (data.id === currentUser) {
+						indexe = index
+					} 
+				})
+				if (indexe !== -1) users.splice(indexe, 1);
 				randomUser = users[Math.floor(Math.random() * users.length)].id;
 			})
 			.catch(function (error) {
@@ -31,11 +40,12 @@ export default function Home() {
 
 		store
 			.collection("chatRooms")
-			.doc("chat_" + currentUser.uid + "_" + randomUser)
+			.doc("chat_" + currentUser + "_" + randomUser)
 			.set({
 				message,
 				to: randomUser,
-				from: currentUser.uid,
+				from: currentUser,
+				time: Date.now()
 			});
 	};
 
