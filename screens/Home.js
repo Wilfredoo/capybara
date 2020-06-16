@@ -13,7 +13,6 @@ const short = require('short-uuid');
 
 export default function Home({ navigation }) {
 	const [message, setMessage] = useState("");
-	useEffect(() => console.log(message), [message]);
 	const currentUser = firebase.auth().currentUser.uid;
 	const store = firebase.firestore();
 
@@ -39,10 +38,12 @@ export default function Home({ navigation }) {
 				console.log("Error getting documents: ", error);
 			});
 
+			const newShortUUID = short.generate()
 		store
 			.collection("chatRooms")
-			.doc(short.generate())
+			.doc(newShortUUID)
 			.set({
+				id: newShortUUID,
 				message,
 				to: randomUser,
 				from: currentUser,
@@ -57,6 +58,7 @@ export default function Home({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<Header />
+			<Text style={{marginBottom: 30}}>Send a message, it will arrive to any other user at random.</Text>
 			<TextInput
 				multiline={true}
 				numberOfLines={4}

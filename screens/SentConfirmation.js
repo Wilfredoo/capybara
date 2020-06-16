@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 
-import { Text, View, StyleSheet, BackHandler } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 
 export default function SentConfirm({ navigation }) {
 	const { message } = navigation.state.params;

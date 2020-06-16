@@ -6,6 +6,7 @@ import History from './screens/History'
 import Profile from './screens/Profile'
 import SentConfirmation from './screens/SentConfirmation'
 import Home from './screens/Home'
+import Reply from './screens/Reply'
 import firebaseConfig from './config/FirebaseConfig'
 import * as firebase from 'firebase';
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -88,7 +89,8 @@ export default createAppContainer(
       Loading: Loading,
       App: DashboardTabNavigator,
       Auth: AuthStack,
-      Sent: SentConfirmation
+      Sent: SentConfirmation,
+      Reply: Reply
     },
     {
       initialRouteName: "Loading"
