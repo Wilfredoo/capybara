@@ -5,7 +5,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { Feather } from "@expo/vector-icons";
 import Header from "./Header";
-import { NavigationEvents } from "react-navigation";
 
 export default function History({ navigation }) {
 	const currentUser = firebase.auth().currentUser.uid;
@@ -34,7 +33,7 @@ export default function History({ navigation }) {
 		return receivedArray;
 	}
 
-	const reply = (id) => {
+	const seeMessage = (id) => {
 		navigation.navigate("Reply", {
 			id,
 		});
@@ -48,7 +47,7 @@ export default function History({ navigation }) {
 					{messagesArray &&
 						messagesArray.map(data => {
 							return (
-								<TouchableOpacity onPress={() => reply(data.id)}>
+								<TouchableOpacity onPress={() => seeMessage(data.id)}>
 									<View style={styles.historyUnit}>
 										<Text>{data.message}</Text>
 										<View style={styles.flex}>

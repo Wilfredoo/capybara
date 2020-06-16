@@ -18,7 +18,7 @@ export default function Home({ navigation }) {
 
 	const sendMessage = async () => {
 		let users;
-		let randomUser;
+		let randomUser = "no other users";
 		let indexe;
 
 		await store
@@ -58,11 +58,10 @@ export default function Home({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<Header />
-			<Text style={{marginBottom: 30}}>Send a message, it will arrive to any other user at random.</Text>
+			<Text style={{marginBottom: 30, width: 300, textAlign: "center"}}>Send a message and it will arrive to any other user at random.</Text>
 			<TextInput
 				multiline={true}
 				numberOfLines={4}
-				style={{ height: 40 }}
 				placeholder={
 					"Be creative! \nOr just be yourself. \nDo whatever you want."
 				}
@@ -94,6 +93,7 @@ const styles = StyleSheet.create({
 		textAlignVertical: "top",
 		paddingLeft: 10,
 		paddingTop: 10,
+		
 	},
 	button: {
 		marginHorizontal: 30,

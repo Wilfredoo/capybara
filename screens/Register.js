@@ -24,6 +24,7 @@ export default class Register extends Component {
 						email: this.state.email,
 						password: this.state.password,
 						name: this.state.name,
+						uuid: firebase.auth().currentUser.uid
 					});
 				return userCredentials.user.updateProfile({
 					displayName: this.state.name,
