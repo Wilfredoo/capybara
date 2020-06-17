@@ -1,29 +1,38 @@
 import React from "react";
-import Loading from './screens/Loading'
-import Login from './screens/Login'
-import Register from './screens/Register'
-import History from './screens/History'
-import Profile from './screens/Profile'
-import SentConfirmation from './screens/SentConfirmation'
-import Home from './screens/Home'
-import Reply from './screens/Reply'
-import firebaseConfig from './config/FirebaseConfig'
-import * as firebase from 'firebase';
+import Loading from "./screens/Loading";
+import Login from "./screens/Login";
+import Register from "./screens/Register";
+import History from "./screens/History";
+import Profile from "./screens/Profile";
+import SentConfirmation from "./screens/SentConfirmation";
+import Home from "./screens/Home";
+import Reply from "./screens/Reply";
+import firebaseConfig from "./config/FirebaseConfig";
+import * as firebase from "firebase";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import {  FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
+import { decode, encode } from "base-64";
+
+import { FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
 
 firebase.initializeApp(firebaseConfig);
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
- 
+
+if (!global.btoa) {
+  global.btoa = encode;
+}
+
+if (!global.atob) {
+  global.atob = decode;
+}
+
 const AuthStack = createStackNavigator({
   Login: Login,
-  Register: Register
-})
-
+  Register: Register,
+});
 
 const DashboardTabNavigator = createBottomTabNavigator(
   {
@@ -37,9 +46,9 @@ const DashboardTabNavigator = createBottomTabNavigator(
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
-          inactiveTintColor: "gray"
-        }
-      }
+          inactiveTintColor: "gray",
+        },
+      },
     },
 
     Main: {
@@ -51,9 +60,9 @@ const DashboardTabNavigator = createBottomTabNavigator(
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
-          inactiveTintColor: "gray"
-        }
-      }
+          inactiveTintColor: "gray",
+        },
+      },
     },
     History: {
       screen: History,
@@ -65,23 +74,22 @@ const DashboardTabNavigator = createBottomTabNavigator(
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
-          inactiveTintColor: "gray"
-        }
-      }
-    }
+          inactiveTintColor: "gray",
+        },
+      },
+    },
   },
   {
     initialRouteName: "Main",
     navigationOptions: ({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index];
       return {
-        headerTitle: routeName
+        headerTitle: routeName,
       };
-    }
+    },
   },
   {}
 );
-
 
 export default createAppContainer(
   createSwitchNavigator(
@@ -90,11 +98,10 @@ export default createAppContainer(
       App: DashboardTabNavigator,
       Auth: AuthStack,
       Sent: SentConfirmation,
-      Reply: Reply
+      Reply: Reply,
     },
     {
-      initialRouteName: "Loading"
+      initialRouteName: "Loading",
     }
   )
-)
-
+);
