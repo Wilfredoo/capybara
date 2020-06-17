@@ -5,7 +5,6 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Image,
 } from "react-native";
 import * as firebase from "firebase";
 import Header from "./Header";
@@ -55,8 +54,8 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Header />
-      <Text style={{ marginBottom: 30, width: 300, textAlign: "center" }}>
+      <Header navigation={navigation} />
+      <Text style={styles.title}>
         Send a message and it will arrive to any other user at random.
       </Text>
       <TextInput
@@ -70,7 +69,7 @@ export default function Home({ navigation }) {
         style={styles.input}
       />
       <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
-        <Text style={{ color: "#FFF", fontWeight: "500" }}> Send </Text>
+        <Text style={styles.buttonText}> Send </Text>
       </TouchableOpacity>
     </View>
   );
@@ -82,17 +81,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  title: {
+    marginBottom: 50,
+    width: 300,
+    textAlign: "center",
+    fontSize: 20,
+  },
   input: {
     borderColor: "#8A8F9E",
     borderWidth: StyleSheet.hairlineWidth,
     height: 140,
-    minWidth: 250,
+    minWidth: 300,
     fontSize: 15,
     color: "#161F3D",
     borderRadius: 5,
     textAlignVertical: "top",
     paddingLeft: 10,
     paddingTop: 10,
+    fontSize: 20,
+    marginBottom: 30,
   },
   button: {
     marginHorizontal: 30,
@@ -101,8 +108,8 @@ const styles = StyleSheet.create({
     height: 52,
     alignItems: "center",
     justifyContent: "center",
-    margin: 30,
     paddingLeft: 30,
     paddingRight: 30,
   },
+  buttonText: { color: "#FFF", fontWeight: "500", fontSize: 20 },
 });

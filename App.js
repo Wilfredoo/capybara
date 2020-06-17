@@ -16,7 +16,6 @@ import { decode, encode } from "base-64";
 
 import { FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
 
-firebase.initializeApp(firebaseConfig);
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }

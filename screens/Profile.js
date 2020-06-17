@@ -1,46 +1,47 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from "firebase";
-import Header from './Header'
-
+import Header from "./Header";
 
 export default class Profile extends Component {
-	state = {
-		email: "",
-		displayName: "",
-	};
+  state = {
+    email: "",
+    displayName: "",
+  };
 
-	componentDidMount() {
-		const { email, displayName } = firebase.auth().currentUser;
-		this.setState({ email, displayName });
-	}
+  componentDidMount() {
+    const { email, displayName } = firebase.auth().currentUser;
+    this.setState({ email, displayName });
+  }
 
-	signOutUser = () => {
-		firebase.auth().signOut();
-	};
+  signOutUser = () => {
+    firebase.auth().signOut();
+  };
 
-	render() {
-		return (
-			<View style={styles.container}>
-			<Header />
+  render() {
+    return (
+      <View style={styles.container}>
+        <Header navigation={this.props.navigation} />
 
-				<Text>Hi... {this.state.displayName} </Text>
+        <Text style={{ marginBottom: 15, fontSize: 24 }}>
+          Hey {this.state.displayName}{" "}
+        </Text>
 
-				<TouchableOpacity
-					style={{ marginTop: 32 }}
-					onPress={() => this.signOutUser()}
-				>
-					<Text>Log Out</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
+        <TouchableOpacity
+          style={{ marginTop: 32 }}
+          onPress={() => this.signOutUser()}
+        >
+          <Text>Log Out</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
