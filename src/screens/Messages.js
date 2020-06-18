@@ -11,6 +11,7 @@ import Header from "./Header";
 const short = require("short-uuid");
 import moment from "moment";
 import createMessage from "../helpers/createMessage";
+import Back from "./Back";
 
 export default function Messages({ navigation }) {
   const store = firebase.firestore();
@@ -59,45 +60,55 @@ export default function Messages({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+      <Back navigation={navigation} where="History" />
+
       <Header navigation={navigation} />
-
-      {receivedMessage && (
-        <>
-          <Text style={{ marginBottom: 20 }}>You found a message...</Text>
-          <View style={{ marginBottom: 20, textAlign: "center" }}>
-            <Text style={{ fontStyle: "italic", fontWeight: "500" }}>
-              {receivedMessage.message}
-            </Text>
-            {sender && (
-              <Text style={{ fontStyle: "italic" }}>
-                - {sender.name}, {moment(receivedMessage.time).fromNow()}
-              </Text>
-            )}
-          </View>
-
-          {receivedMessage && !receivedMessage.hasReply && (
-            <>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => reply(sender)}
+      <View style={styles.container}>
+        {receivedMessage && (
+          <>
+            <Text style={{ marginBottom: 20 }}>You found a message...</Text>
+            <View style={{ marginBottom: 20, textAlign: "center" }}>
+              <Text
+                style={{ fontStyle: "italic", fontWeight: "500", fontSize: 24 }}
               >
-                <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
-              </TouchableOpacity>
+                {receivedMessage.message}
+              </Text>
+              {sender && (
+                <Text style={{ fontStyle: "italic" }}>
+                  - {sender.name}, {moment(receivedMessage.time).fromNow()}
+                </Text>
+              )}
+            </View>
 
-              <TextInput
-                multiline={true}
-                numberOfLines={4}
-                placeholder={placeholder}
-                onChangeText={(message) => setMessage(message)}
-                defaultValue={receivedMessage}
-                style={styles.input}
-              />
-            </>
-          )}
-        </>
-      )}
-    </View>
+            {receivedMessage && !receivedMessage.hasReply && (
+              <>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => reply(sender)}
+                >
+                  <Text style={{ color: "#FFF", fontWeight: "500" }}>
+                    Reply
+                  </Text>
+                </TouchableOpacity>
+
+                <TextInput
+                  multiline={true}
+                  numberOfLines={4}
+                  placeholder={placeholder}
+                  onChangeText={(message) => setMessage(message)}
+                  defaultValue={receivedMessage}
+                  style={styles.input}
+                />
+              </>
+            )}
+            {receivedMessage.hasReply && (
+              <Text>You replied to this message already!</Text>
+            )}
+          </>
+        )}
+      </View>
+    </>
   );
 }
 

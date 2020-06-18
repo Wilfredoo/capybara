@@ -20,20 +20,20 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <>
         <Header navigation={this.props.navigation} />
-
-        <Text style={{ marginBottom: 15, fontSize: 24 }}>
-          Hey {this.state.displayName}{" "}
-        </Text>
-
-        <TouchableOpacity
-          style={{ marginTop: 32 }}
-          onPress={() => this.signOutUser()}
-        >
-          <Text>Log Out</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.container}>
+          <Text style={{ marginBottom: 15, fontSize: 24 }}>
+            Hey {this.state.displayName}{" "}
+          </Text>
+          <TouchableOpacity
+            style={{ marginTop: 32 }}
+            onPress={() => this.signOutUser()}
+          >
+            <Text>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+      </>
     );
   }
 }

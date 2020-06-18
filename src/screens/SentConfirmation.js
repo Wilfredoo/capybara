@@ -1,25 +1,35 @@
-import React, { useEffect } from "react";
-import { Feather } from "@expo/vector-icons";
-
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
+import Header from "./Header";
+import Back from "./Back";
 
 export default function SentConfirm({ navigation }) {
   const { message } = navigation.state.params;
-  useEffect(() => console.log("proposal", message));
+  const [sentMessage, setSentMessage] = useState("");
 
-  const back = () => {
-    navigation.navigate("App");
-  };
+  useEffect(() => {
+    setSentMessage(message);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <Feather name="arrow-left" size={30} color="green" onPress={back} />
-      <Text style={{ marginBottom: 30, textAlign: "center" }}>
-        Your message has been sent to someone at random. Maybe she'll reply.
-        Maybe not ¯\_(ツ)_/¯
-      </Text>
-      <Text style={{ marginBottom: 30, fontStyle: "italic" }}>{message}</Text>
-    </View>
+    <>
+      <Back navigation={navigation} where="App" />
+      <Header navigation={navigation} />
+      <View style={styles.container}>
+        <Text style={{ marginBottom: 30, textAlign: "center", width: 380 }}>
+          Your message has been sent to someone at random:
+        </Text>
+        {sentMessage && (
+          <Text style={{ marginBottom: 30, fontStyle: "italic", fontSize: 24 }}>
+            "{sentMessage}"
+          </Text>
+        )}
+        <Text style={{ marginBottom: 30, textAlign: "center", width: 380 }}>
+          Maybe he/she/it will reply.{"\n"}
+          {"\n"} Maybe not ¯\_(ツ)_/¯
+        </Text>
+      </View>
+    </>
   );
 }
 

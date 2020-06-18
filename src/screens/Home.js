@@ -47,25 +47,27 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <Header navigation={navigation} />
-      <Text style={styles.title}>
-        Send a message and it will arrive to any other user at random.
-      </Text>
-      <TextInput
-        multiline={true}
-        numberOfLines={4}
-        placeholder={
-          "Be creative! \nOr just be yourself. \nDo whatever you want."
-        }
-        onChangeText={(message) => setMessage(message)}
-        defaultValue={message}
-        style={styles.input}
-      />
-      <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
-        <Text style={styles.buttonText}> Send </Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>
+          Send a message and it will arrive to any other user at random.
+        </Text>
+        <TextInput
+          multiline={true}
+          numberOfLines={4}
+          placeholder={
+            "Be creative! \nOr just be yourself. \nDo whatever you want."
+          }
+          onChangeText={(message) => setMessage(message)}
+          defaultValue={message}
+          style={styles.input}
+        />
+        <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
+          <Text style={styles.buttonText}> Send </Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 

@@ -3,16 +3,16 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 export default function Header({ navigation }) {
   return (
-    <View style={styles.row}>
+    <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("App")}>
         <View style={styles.flex}>
           <Image
-            style={{ width: 40, height: 40, bottom: 18 }}
+            style={{ width: 40, height: 40 }}
             source={require("../../assets/splash.png")}
           />
-          <Text style={{ marginBottom: 30 }}>Message in a bottle</Text>
+          <Text style={{ margin: 7 }}>Message in a bottle</Text>
           <Image
-            style={{ width: 40, height: 40, bottom: 18 }}
+            style={{ width: 40, height: 40 }}
             source={require("../../assets/splash.png")}
           />
         </View>
@@ -22,11 +22,13 @@ export default function Header({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    position: "absolute",
-    top: 85,
+  container: {
+    top: 60,
+    alignItems: "center",
   },
   flex: {
     flexDirection: "row",
+    // justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
 });

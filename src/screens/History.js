@@ -19,12 +19,11 @@ export default function History({ navigation }) {
 
   useEffect(() => {
     getAllMessages().then((result) => {
+      let messagesResult = [];
       result.forEach((docSnapshot) => {
-        setMessagesArray((oldMessagesArray) => [
-          ...oldMessagesArray,
-          docSnapshot.data(),
-        ]);
+        messagesResult.push(docSnapshot.data());
       });
+      setMessagesArray(messagesResult);
     });
   }, []);
 
@@ -34,7 +33,6 @@ export default function History({ navigation }) {
     const receivedSnapshot = await chatRoomsRef
       .where("to", "==", currentUser)
       .get();
-
     const receivedArray = receivedSnapshot.docs;
     return receivedArray;
   }
@@ -46,33 +44,38 @@ export default function History({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header navigation={navigation} />
-
-      {messagesArray.length === 0 && (
-        <ActivityIndicator size="large"></ActivityIndicator>
-      )}
-      <View style={styles.historyView}>
-        <ScrollView>
-          {messagesArray &&
-            messagesArray.map((data) => {
-              return (
-                <TouchableOpacity onPress={() => seeMessage(data.id)}>
-                  <View style={styles.historyUnit}>
-                    <Text>{data.message}</Text>
-                    <View style={styles.flex}>
-                      <Text style={{ color: "gray" }}>
-                        {moment(data.time).fromNow()}
-                      </Text>
-                      <Feather name="arrow-down-left" size={30} color="pink" />
+    <>
+      <Header navigation={navigation} where={"History"} />
+      <View style={styles.container}>
+        {messagesArray.length === 0 && (
+          <ActivityIndicator size="large"></ActivityIndicator>
+        )}
+        <View style={styles.historyView}>
+          <ScrollView>
+            {messagesArray &&
+              messagesArray.map((data, i) => {
+                return (
+                  <TouchableOpacity onPress={() => seeMessage(data.id)}>
+                    <View style={styles.historyUnit} key={i}>
+                      <Text>{data.message}</Text>
+                      <View style={styles.flex}>
+                        <Text style={{ color: "gray" }}>
+                          {moment(data.time).fromNow()}
+                        </Text>
+                        <Feather
+                          name="arrow-down-left"
+                          size={30}
+                          color="pink"
+                        />
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-        </ScrollView>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -83,8 +86,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   historyView: {
-    width: 300,
-    marginTop: 10,
+    width: 350,
+    marginTop: 40,
     position: "absolute",
     top: 80,
   },
