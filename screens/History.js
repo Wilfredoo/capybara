@@ -40,7 +40,7 @@ export default function History({ navigation }) {
   }
 
   const seeMessage = (id) => {
-    navigation.navigate("Reply", {
+    navigation.navigate("Messages", {
       id,
     });
   };

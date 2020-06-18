@@ -44,6 +44,7 @@ export default function Home({ navigation }) {
       message,
       to: randomUser,
       from: currentUser,
+      hasReply: false,
       time: Date.now(),
     });
 

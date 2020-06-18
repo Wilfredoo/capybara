@@ -9,10 +9,9 @@ import {
 import * as firebase from "firebase";
 import Header from "./Header";
 const short = require("short-uuid");
-
 import moment from "moment";
 
-export default function Reply({ navigation }) {
+export default function Messages({ navigation }) {
   const store = firebase.firestore();
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [sender, setSender] = useState(null);
@@ -20,17 +19,17 @@ export default function Reply({ navigation }) {
   const [message, setMessage] = useState("");
 
   const currentUser = firebase.auth().currentUser.uid;
+  const messageRef = store.collection("chatRooms");
 
   useEffect(() => {
     const { id } = navigation.state.params;
-    const messageRef = store.collection("chatRooms").doc(id);
 
     messageRef
+      .doc(id)
       .get()
       .then(function (doc) {
         if (doc.exists) {
           setReceivedMessage(doc.data());
-          console.log("message from", doc.data().from);
           const senderRef = store.doc(`users/${doc.data().from}`);
           senderRef.get().then((doc) => {
             setSender(doc.data());
@@ -43,11 +42,20 @@ export default function Reply({ navigation }) {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-  }, []);
+  }, [receivedMessage]);
 
   const reply = (senderId) => {
+    console.log("received message id", receivedMessage.id);
+    //update responded message
+    messageRef
+      .doc(receivedMessage.id)
+      .update({ hasReply: true })
+      .then((res) => {
+        console.log(`Document updated at ${res.updateTime}`, res);
+      });
+
+    // create new message
     const newShortUUID = short.generate();
-    console.log("reply to this sender", senderId);
     store.collection("chatRooms").doc(newShortUUID).set({
       id: newShortUUID,
       message: message,
@@ -61,6 +69,8 @@ export default function Reply({ navigation }) {
   return (
     <View style={styles.container}>
       <Header navigation={navigation} />
+      {receivedMessage &&
+        console.log("received message id in render", receivedMessage.id)}
 
       {receivedMessage && (
         <>
@@ -84,7 +94,7 @@ export default function Reply({ navigation }) {
         multiline={true}
         numberOfLines={4}
         placeholder={placeholder}
-        onChangeText={(receivedMessage) => setReceivedMessage(receivedMessage)}
+        onChangeText={(message) => setMessage(message)}
         defaultValue={receivedMessage}
         style={styles.input}
       />

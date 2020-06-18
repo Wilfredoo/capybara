@@ -6,15 +6,24 @@ import History from "./screens/History";
 import Profile from "./screens/Profile";
 import SentConfirmation from "./screens/SentConfirmation";
 import Home from "./screens/Home";
-import Reply from "./screens/Reply";
+import Messages from "./screens/Messages";
 import firebaseConfig from "./config/FirebaseConfig";
 import * as firebase from "firebase";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { decode, encode } from "base-64";
-
+import { YellowBox } from "react-native";
+import _ from "lodash";
 import { FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
+
+YellowBox.ignoreWarnings(["Setting a timer"]);
+const _console = _.clone(console);
+console.warn = (message) => {
+  if (message.indexOf("Setting a timer") <= -1) {
+    _console.warn(message);
+  }
+};
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -97,7 +106,7 @@ export default createAppContainer(
       App: DashboardTabNavigator,
       Auth: AuthStack,
       Sent: SentConfirmation,
-      Reply: Reply,
+      Messages: Messages,
     },
     {
       initialRouteName: "Loading",
