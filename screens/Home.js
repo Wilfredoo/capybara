@@ -10,6 +10,7 @@ import * as firebase from "firebase";
 import Header from "./Header";
 const short = require("short-uuid");
 import "firebase/firestore";
+import createMessage from "./createMessage.js";
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
@@ -38,15 +39,7 @@ export default function Home({ navigation }) {
         console.log("Error getting documents: ", error);
       });
 
-    const newShortUUID = short.generate();
-    store.collection("chatRooms").doc(newShortUUID).set({
-      id: newShortUUID,
-      message,
-      to: randomUser,
-      from: currentUser,
-      hasReply: false,
-      time: Date.now(),
-    });
+    createMessage(message, randomUser, currentUser, false, false);
 
     navigation.navigate("Sent", {
       message: message,

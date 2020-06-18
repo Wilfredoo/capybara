@@ -10,6 +10,7 @@ import * as firebase from "firebase";
 import Header from "./Header";
 const short = require("short-uuid");
 import moment from "moment";
+import createMessage from "./createMessage";
 
 export default function Messages({ navigation }) {
   const store = firebase.firestore();
@@ -54,23 +55,12 @@ export default function Messages({ navigation }) {
         console.log(`Document updated at ${res.updateTime}`, res);
       });
 
-    // create new message
-    const newShortUUID = short.generate();
-    store.collection("chatRooms").doc(newShortUUID).set({
-      id: newShortUUID,
-      message: message,
-      to: senderId.uuid,
-      from: currentUser,
-      time: Date.now(),
-      reply: true,
-    });
+    createMessage(message, senderId.uuid, currentUser, true, false);
   };
 
   return (
     <View style={styles.container}>
       <Header navigation={navigation} />
-      {receivedMessage &&
-        console.log("received message id in render", receivedMessage.id)}
 
       {receivedMessage && (
         <>
