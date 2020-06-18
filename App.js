@@ -1,12 +1,12 @@
 import React from "react";
-import Loading from "./screens/Loading";
-import Login from "./screens/Login";
-import Register from "./screens/Register";
-import History from "./screens/History";
-import Profile from "./screens/Profile";
-import SentConfirmation from "./screens/SentConfirmation";
-import Home from "./screens/Home";
-import Messages from "./screens/Messages";
+import Loading from "./src/screens/Loading";
+import Login from "./src/screens/Login";
+import Register from "./src/screens/Register";
+import History from "./src/screens/History";
+import Profile from "./src/screens/Profile";
+import SentConfirmation from "./src/screens/SentConfirmation";
+import Home from "./src/screens/Home";
+import Messages from "./src/screens/Messages";
 import firebaseConfig from "./config/FirebaseConfig";
 import * as firebase from "firebase";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -17,6 +17,10 @@ import { YellowBox } from "react-native";
 import _ from "lodash";
 import { FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
 
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
 console.warn = (message) => {
@@ -24,10 +28,6 @@ console.warn = (message) => {
     _console.warn(message);
   }
 };
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
 
 if (!global.btoa) {
   global.btoa = encode;

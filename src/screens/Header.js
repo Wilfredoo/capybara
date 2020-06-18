@@ -8,12 +8,12 @@ export default function Header({ navigation }) {
         <View style={styles.flex}>
           <Image
             style={{ width: 40, height: 40, bottom: 18 }}
-            source={require("../assets/splash.png")}
+            source={require("../../assets/splash.png")}
           />
           <Text style={{ marginBottom: 30 }}>Message in a bottle</Text>
           <Image
             style={{ width: 40, height: 40, bottom: 18 }}
-            source={require("../assets/splash.png")}
+            source={require("../../assets/splash.png")}
           />
         </View>
       </TouchableOpacity>

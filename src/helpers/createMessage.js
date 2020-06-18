@@ -1,5 +1,11 @@
 import short from "short-uuid";
+import firebaseConfig from "../../config/FirebaseConfig";
 import * as firebase from "firebase";
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 const store = firebase.firestore();
 
 const createMessage = (message, to, from, isReply, hasReply) => {

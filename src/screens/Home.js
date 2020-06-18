@@ -10,7 +10,7 @@ import * as firebase from "firebase";
 import Header from "./Header";
 const short = require("short-uuid");
 import "firebase/firestore";
-import createMessage from "./createMessage.js";
+import createMessage from "../helpers/createMessage.js";
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");

@@ -10,7 +10,7 @@ import * as firebase from "firebase";
 import Header from "./Header";
 const short = require("short-uuid");
 import moment from "moment";
-import createMessage from "./createMessage";
+import createMessage from "../helpers/createMessage";
 
 export default function Messages({ navigation }) {
   const store = firebase.firestore();
@@ -75,19 +75,28 @@ export default function Messages({ navigation }) {
               </Text>
             )}
           </View>
-          <TouchableOpacity style={styles.button} onPress={() => reply(sender)}>
-            <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
-          </TouchableOpacity>
+
+          {receivedMessage && !receivedMessage.hasReply && (
+            <>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => reply(sender)}
+              >
+                <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
+              </TouchableOpacity>
+
+              <TextInput
+                multiline={true}
+                numberOfLines={4}
+                placeholder={placeholder}
+                onChangeText={(message) => setMessage(message)}
+                defaultValue={receivedMessage}
+                style={styles.input}
+              />
+            </>
+          )}
         </>
       )}
-      <TextInput
-        multiline={true}
-        numberOfLines={4}
-        placeholder={placeholder}
-        onChangeText={(message) => setMessage(message)}
-        defaultValue={receivedMessage}
-        style={styles.input}
-      />
     </View>
   );
 }
