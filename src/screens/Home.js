@@ -14,6 +14,7 @@ import createMessage from "../helpers/createMessage.js";
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   useEffect(() => console.log(message), [message]);
@@ -23,6 +24,10 @@ export default function Home({ navigation }) {
     let users;
     let randomUser = "no other users";
     let indexe;
+
+    if (message === "") {
+      return setError("empty");
+    }
 
     await store
       .collection("users")
@@ -56,9 +61,6 @@ export default function Home({ navigation }) {
           Send a message and it will arrive to any other user at random.
         </Text>
 
-        {/* {errors.messageToSend && (
-          <Text>You can't leave this field empty. That's the only rule.</Text>
-        )} */}
         <TextInput
           maxLength={100}
           minLength={2}
@@ -69,6 +71,11 @@ export default function Home({ navigation }) {
           defaultValue={message}
           style={styles.input}
         />
+        {error === "empty" && (
+          <Text style={{ marginBottom: 18 }}>
+            You can't leave this field empty. That's, like, the only rule.
+          </Text>
+        )}
         <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
           <Text style={styles.buttonText}> Send </Text>
         </TouchableOpacity>

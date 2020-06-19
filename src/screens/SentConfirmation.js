@@ -31,7 +31,8 @@ export default function SentConfirmation({ navigation }) {
         </Text>
         <Text style={{ marginBottom: 30, textAlign: "center", width: 380 }}>
           Maybe they will reply.{"\n"}
-          {"\n"} Maybe not {"\n"}¯\_(ツ)_/¯
+          {"\n"} Maybe not {"\n"}
+          {"\n"}¯\_(ツ)_/¯
         </Text>
       </View>
     </>
