@@ -16,8 +16,10 @@ export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
+  useEffect(() => console.log(message), [message]);
 
   const sendMessage = async () => {
+    console.log("send message", message);
     let users;
     let randomUser = "no other users";
     let indexe;
@@ -53,12 +55,16 @@ export default function Home({ navigation }) {
         <Text style={styles.title}>
           Send a message and it will arrive to any other user at random.
         </Text>
+
+        {/* {errors.messageToSend && (
+          <Text>You can't leave this field empty. That's the only rule.</Text>
+        )} */}
         <TextInput
+          maxLength={100}
+          minLength={2}
           multiline={true}
           numberOfLines={4}
-          placeholder={
-            "Be creative! \nOr just be yourself. \nDo whatever you want."
-          }
+          required={true}
           onChangeText={(message) => setMessage(message)}
           defaultValue={message}
           style={styles.input}
@@ -70,7 +76,6 @@ export default function Home({ navigation }) {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -88,6 +93,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     height: 140,
     minWidth: 300,
+    maxWidth: 400,
     fontSize: 15,
     color: "#161F3D",
     borderRadius: 5,

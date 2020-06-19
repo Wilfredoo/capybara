@@ -19,7 +19,6 @@ export default function Messages({ navigation }) {
   const [sender, setSender] = useState(null);
   const [placeholder, setPlaceholder] = useState("");
   const [message, setMessage] = useState("");
-
   const currentUser = firebase.auth().currentUser.uid;
   const messageRef = store.collection("chatRooms");
 
@@ -48,21 +47,18 @@ export default function Messages({ navigation }) {
 
   const reply = (senderId) => {
     console.log("received message id", receivedMessage.id);
-    //update responded message
     messageRef
       .doc(receivedMessage.id)
       .update({ hasReply: true })
       .then((res) => {
         console.log(`Document updated at ${res.updateTime}`, res);
       });
-
     createMessage(message, senderId.uuid, currentUser, true, false);
   };
 
   return (
     <>
       <Back navigation={navigation} where="History" />
-
       <Header navigation={navigation} />
       <View style={styles.container}>
         {receivedMessage && (

@@ -31,6 +31,7 @@ export default function History({ navigation }) {
 
   async function getAllMessages() {
     const receivedSnapshot = await chatRoomsRef
+      .orderBy("time", "desc")
       .where("to", "==", currentUser)
       .get();
     const receivedArray = receivedSnapshot.docs;

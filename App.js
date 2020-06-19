@@ -109,7 +109,7 @@ export default createAppContainer(
       Messages: Messages,
     },
     {
-      initialRouteName: "Sent",
+      initialRouteName: "Loading",
     }
   )
 );
