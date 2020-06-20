@@ -8,16 +8,20 @@ import {
 } from "react-native";
 import * as firebase from "firebase";
 import Header from "./Header";
-const short = require("short-uuid");
 import "firebase/firestore";
 import createMessage from "../helpers/createMessage.js";
+import registerToken from "../helpers/registerNotification.js";
+import sendNotification from "../helpers/sendNotification.js";
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
-  useEffect(() => console.log(message), [message]);
+
+  useEffect(() => {
+    registerToken(currentUser);
+  }, []);
 
   const sendMessage = async () => {
     console.log("send message", message);
@@ -58,9 +62,9 @@ export default function Home({ navigation }) {
       <Header navigation={navigation} />
       <View style={styles.container}>
         <Text style={styles.title}>
-          Send a message and it will arrive to any other user at random.
+          Send a message and it will arrive to any other user at random. Maybe
+          your neighbour. Maybe some senior citizen in Buenos Aires.
         </Text>
-
         <TextInput
           maxLength={100}
           minLength={2}
@@ -73,7 +77,8 @@ export default function Home({ navigation }) {
         />
         {error === "empty" && (
           <Text style={{ marginBottom: 18 }}>
-            You can't leave this field empty. That's, like, the only rule.
+            You can't leave this field empty. That's, like, the only rule
+            dawg...
           </Text>
         )}
         <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
