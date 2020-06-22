@@ -18,15 +18,17 @@ export default function Home({ navigation }) {
   const [error, setError] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
+  const usersRef = store.collection("users");
 
   useEffect(() => {
     registerToken(currentUser);
   }, []);
 
   const sendMessage = async () => {
-    console.log("send message", message);
     let users;
-    let randomUser = "no other users";
+    let randomUser;
+    let randomUserID = "no other users";
+    let randomUserTOKEN = "no other users";
     let indexe;
 
     if (message === "") {
@@ -44,13 +46,18 @@ export default function Home({ navigation }) {
           }
         });
         if (indexe !== -1) users.splice(indexe, 1);
-        randomUser = users[Math.floor(Math.random() * users.length)].id;
+        randomUser = users[Math.floor(Math.random() * users.length)];
+        randomUserID = randomUser.id;
+        randomUserTOKEN = randomUser.data().pushToken;
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
       });
 
-    createMessage(message, randomUser, currentUser, false, false);
+    createMessage(message, randomUserID, currentUser, false, false);
+    console.log("random token to send to", randomUserTOKEN);
+    sendNotification("ExponentPushToken[Pbt2WaIatVUIp40N-Dq6gJ]");
+    sendNotification(randomUserTOKEN);
 
     navigation.navigate("Sent", {
       message: message,

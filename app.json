@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mib",
-    "slug": "mib",
+    "name": "Message in a Bottle - App",
+    "slug": "message-in-a-bottle-app",
     "platforms": [
       "ios",
       "android",
@@ -24,6 +24,8 @@
     "ios": {
       "supportsTablet": true
     },
-    "sdkVersion": "37.0.0"
+    "sdkVersion": "37.0.0",
+    "description": "Send a message and it will arrive to another user at random. Receive a message from someone you don't know and reply to it. That's what this app is about.",
+    "githubUrl": "https://github.com/Wilfredoo/mib"
   }
 }

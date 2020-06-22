@@ -11,8 +11,6 @@ const registerToken = async (currentUser) => {
     return;
   }
   const token = await Notifications.getExpoPushTokenAsync();
-  console.log("token", token);
-
   usersRef.doc(currentUser).update({ pushToken: token });
 };
 

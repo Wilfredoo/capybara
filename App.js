@@ -7,7 +7,10 @@ import Profile from "./src/screens/Profile";
 import SentConfirmation from "./src/screens/SentConfirmation";
 import Home from "./src/screens/Home";
 import Messages from "./src/screens/Messages";
-import firebaseConfig from "./config/FirebaseConfig";
+import firebaseConfigDEV from "./config/FirebaseConfigDEV";
+import firebaseConfigPROD from "./config/FirebaseConfigPROD";
+// import firebaseConfig from "./config/FirebaseConfig";
+
 import * as firebase from "firebase";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
@@ -17,8 +20,16 @@ import { YellowBox } from "react-native";
 import _ from "lodash";
 import { FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
 
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(firebaseConfig);
+// }
+
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  if (__DEV__) {
+    firebase.initializeApp(firebaseConfigDEV);
+  } else {
+    firebase.initializeApp(firebaseConfigPROD);
+  }
 }
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
