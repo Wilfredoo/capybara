@@ -15,7 +15,7 @@ import Header from "./Header";
 export default function History({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
-  const [messagesArray, setMessagesArray] = useState([]);
+  const [messagesArray, setMessagesArray] = useState(["one element"]);
 
   useEffect(() => {
     getAllMessages().then((result) => {
@@ -49,16 +49,20 @@ export default function History({ navigation }) {
       <Header navigation={navigation} where={"History"} />
       <View style={styles.container}>
         {messagesArray.length === 0 && (
+          <Text>You have received no messages yet</Text>
+        )}
+        {messagesArray.length === 1 && (
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
         <View style={styles.historyView}>
           <ScrollView>
             {messagesArray &&
+              messagesArray[0] !== "one element" &&
               messagesArray.map((data, i) => {
                 return (
                   <TouchableOpacity onPress={() => seeMessage(data.id)}>
                     <View style={styles.historyUnit} key={i}>
-                      <Text>{data.message}</Text>
+                      <Text style={{ width: 350 }}>{data.message}</Text>
                       <View style={styles.flex}>
                         <Text style={{ color: "gray" }}>
                           {moment(data.time).fromNow()}
@@ -92,6 +96,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 80,
   },
+
   flex: {
     flexDirection: "row",
     alignItems: "center",
