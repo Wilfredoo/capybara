@@ -30,12 +30,20 @@ export default function History({ navigation }) {
   const chatRoomsRef = store.collection("chatRooms");
 
   async function getAllMessages() {
+    const sentSnapshot = await chatRoomsRef
+      .orderBy("time", "desc")
+      .where("from", "==", currentUser)
+      .get();
+
     const receivedSnapshot = await chatRoomsRef
       .orderBy("time", "desc")
       .where("to", "==", currentUser)
       .get();
+
+    const sentArray = sentSnapshot.docs;
     const receivedArray = receivedSnapshot.docs;
-    return receivedArray;
+    const messagesArray = sentArray.concat(receivedArray);
+    return messagesArray;
   }
 
   const seeMessage = (id) => {
@@ -67,11 +75,19 @@ export default function History({ navigation }) {
                         <Text style={{ color: "gray" }}>
                           {moment(data.time).fromNow()}
                         </Text>
-                        <Feather
-                          name="arrow-down-left"
-                          size={30}
-                          color="pink"
-                        />
+                        {data.from === currentUser ? (
+                          <Feather
+                            name="arrow-up-right"
+                            size={30}
+                            color="pink"
+                          />
+                        ) : (
+                          <Feather
+                            name="arrow-down-left"
+                            size={30}
+                            color="pink"
+                          />
+                        )}
                       </View>
                     </View>
                   </TouchableOpacity>
