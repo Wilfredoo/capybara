@@ -16,7 +16,9 @@ import Back from "./Back";
 export default function Messages({ navigation }) {
   const store = firebase.firestore();
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [sentMessage, setSentMessage] = useState(null);
   const [sender, setSender] = useState(null);
+  const [inReplyTo, setInReplyTo] = useState(null);
   const [placeholder, setPlaceholder] = useState("");
   const [message, setMessage] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
@@ -24,17 +26,29 @@ export default function Messages({ navigation }) {
 
   useEffect(() => {
     const { id } = navigation.state.params;
-
     messageRef
       .doc(id)
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          setReceivedMessage(doc.data());
+          if (doc.data().from === currentUser) {
+            setSentMessage(doc.data());
+          } else {
+            setReceivedMessage(doc.data());
+          }
           const senderRef = store.doc(`users/${doc.data().from}`);
           senderRef.get().then((doc) => {
             setSender(doc.data());
             setPlaceholder("Say something back to " + doc.data().name);
+          });
+          const inReplyToRef = store.doc(
+            `chatRooCan't perform a React state update on an unmounted component.ms/${
+              doc.data().inReplyTo
+            }`
+          );
+          inReplyToRef.get().then((doc) => {
+            console.log("dov.data(", doc.data());
+            setInReplyTo(doc.data());
           });
         } else {
           console.log("No such document!");
@@ -43,17 +57,16 @@ export default function Messages({ navigation }) {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-  }, [receivedMessage]);
+  }, []);
 
-  const reply = (senderId) => {
-    console.log("received message id", receivedMessage.id);
+  const reply = (senderId, inReplyTo) => {
     messageRef
       .doc(receivedMessage.id)
       .update({ hasReply: true })
       .then((res) => {
         console.log(`Document updated at ${res.updateTime}`, res);
       });
-    createMessage(message, senderId.uuid, currentUser, true, false);
+    createMessage(message, senderId.uuid, currentUser, true, inReplyTo, false);
   };
 
   return (
@@ -61,6 +74,10 @@ export default function Messages({ navigation }) {
       <Back navigation={navigation} where="History" />
       <Header navigation={navigation} />
       <View style={styles.container}>
+        {receivedMessage.isReply && (
+          <Text>In reply to {inReplyTo.message}</Text>
+        )}
+        {/* for any received message */}
         {receivedMessage && (
           <>
             <Text style={{ marginBottom: 20 }}>You found a message...</Text>
@@ -77,29 +94,50 @@ export default function Messages({ navigation }) {
               )}
             </View>
 
-            {receivedMessage && !receivedMessage.hasReply && (
-              <>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => reply(sender)}
-                >
-                  <Text style={{ color: "#FFF", fontWeight: "500" }}>
-                    Reply
-                  </Text>
-                </TouchableOpacity>
+            {/* for received messages I have not yet answered  */}
+            {receivedMessage &&
+              !receivedMessage.isReply &&
+              !receivedMessage.hasReply && (
+                <>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => reply(sender, receivedMessage.id)}
+                  >
+                    <Text style={{ color: "#FFF", fontWeight: "500" }}>
+                      Reply
+                    </Text>
+                  </TouchableOpacity>
 
-                <TextInput
-                  multiline={true}
-                  numberOfLines={4}
-                  placeholder={placeholder}
-                  onChangeText={(message) => setMessage(message)}
-                  defaultValue={receivedMessage}
-                  style={styles.input}
-                />
-              </>
-            )}
-            {receivedMessage.hasReply && (
-              <Text>You replied to this message already!</Text>
+                  <TextInput
+                    multiline={true}
+                    numberOfLines={4}
+                    placeholder={placeholder}
+                    onChangeText={(message) => setMessage(message)}
+                    defaultValue={receivedMessage}
+                    style={styles.input}
+                  />
+                </>
+              )}
+          </>
+        )}
+
+        {sentMessage && (
+          <>
+            <Text style={{ marginBottom: 20 }}>You sent this message...</Text>
+            <View style={{ marginBottom: 20, textAlign: "center" }}>
+              <Text
+                style={{ fontStyle: "italic", fontWeight: "500", fontSize: 24 }}
+              >
+                {sentMessage.message}
+              </Text>
+              {sender && (
+                <Text style={{ fontStyle: "italic" }}>
+                  - {sender.name}, {moment(sentMessage.time).fromNow()}
+                </Text>
+              )}
+            </View>
+            {sentMessage.isReply && (
+              <Text>In reply to {inReplyTo.message}</Text>
             )}
           </>
         )}

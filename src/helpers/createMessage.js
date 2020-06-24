@@ -15,9 +15,8 @@ if (__DEV__) {
 
 const store = firebase.firestore();
 
-const createMessage = (message, to, from, isReply, hasReply) => {
+const createMessage = (message, to, from, isReply, inReplyTo, hasReply) => {
   const newShortUUID = short.generate();
-  // create new message
   store.collection("chatRooms").doc(newShortUUID).set({
     id: newShortUUID,
     message,
@@ -25,6 +24,7 @@ const createMessage = (message, to, from, isReply, hasReply) => {
     from,
     time: Date.now(),
     isReply,
+    inReplyTo,
     hasReply,
   });
 };

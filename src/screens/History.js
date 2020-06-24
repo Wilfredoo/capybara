@@ -33,11 +33,13 @@ export default function History({ navigation }) {
     const sentSnapshot = await chatRoomsRef
       .orderBy("time", "desc")
       .where("from", "==", currentUser)
+      .where("hasReply", "==", false)
       .get();
 
     const receivedSnapshot = await chatRoomsRef
       .orderBy("time", "desc")
       .where("to", "==", currentUser)
+      .where("hasReply", "==", false)
       .get();
 
     const sentArray = sentSnapshot.docs;
@@ -47,7 +49,7 @@ export default function History({ navigation }) {
   }
 
   const seeMessage = (id) => {
-    navigation.navigate("Messages", {
+    navigation.navigate("MessageThread", {
       id,
     });
   };
@@ -59,7 +61,7 @@ export default function History({ navigation }) {
         {messagesArray.length === 0 && (
           <Text>You have received no messages yet</Text>
         )}
-        {messagesArray.length === 1 && (
+        {messagesArray.length === 1 && messagesArray[0] === "one element" && (
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
         <View style={styles.historyView}>
@@ -67,6 +69,7 @@ export default function History({ navigation }) {
             {messagesArray &&
               messagesArray[0] !== "one element" &&
               messagesArray.map((data, i) => {
+                console.log("");
                 return (
                   <TouchableOpacity onPress={() => seeMessage(data.id)}>
                     <View style={styles.historyUnit} key={i}>

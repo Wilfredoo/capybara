@@ -54,7 +54,7 @@ export default function Home({ navigation }) {
         console.log("Error getting documents: ", error);
       });
 
-    createMessage(message, randomUserID, currentUser, false, false);
+    createMessage(message, randomUserID, currentUser, false, "nobody", false);
     console.log("random token to send to", randomUserTOKEN);
     sendNotification("ExponentPushToken[Pbt2WaIatVUIp40N-Dq6gJ]");
     sendNotification(randomUserTOKEN);
