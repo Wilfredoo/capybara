@@ -5,7 +5,6 @@ import * as firebase from "firebase";
 export default class Loading extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log("there is a user in loading", user.uid);
       this.props.navigation.navigate(user ? "App" : "Auth");
     });
   }

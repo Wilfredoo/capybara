@@ -1,18 +1,20 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
+import moment from "moment";
 
-export default function SentMessage({ props }) {
+export default function SentMessage({ data }) {
+  console.log("data props", data.type);
   return (
     <View style={styles.container}>
-      {this.props.data && this.props.type === "sent" && (
+      {data.data && data.type === "sent" && (
         <>
           <Text>
-            Your message has no replies yet :({"\n"} maybe no one found it
-            interesting?{"\n"}
+            Your message has no replies yet :({"\n"}
+            {"\n"} maybe no one found it interesting?{"\n"}
           </Text>
-          <Text>{this.props.data.message}</Text>
+          <Text>{data.data.message}</Text>
           <Text style={{ fontStyle: "italic" }}>
-            {moment(this.props.data.time).fromNow()}
+            {moment(data.data.time).fromNow()}
           </Text>
         </>
       )}
