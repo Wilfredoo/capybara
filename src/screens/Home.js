@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import * as firebase from "firebase";
 import Header from "./Header";
@@ -12,6 +13,8 @@ import "firebase/firestore";
 import createMessage from "../helpers/createMessage.js";
 import registerToken from "../helpers/registerNotification.js";
 import sendNotification from "../helpers/sendNotification.js";
+
+import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
@@ -65,9 +68,11 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <Header navigation={navigation} />
-      <View style={styles.container}>
+      <KeyboardAvoidingScrollView
+        contentContainerStyle={styles.contentContainer}
+      >
         <Text style={styles.title}>
           Send a message and it will arrive to any other user at random. Maybe
           your neighbour. Maybe some senior citizen in Buenos Aires.
@@ -91,13 +96,17 @@ export default function Home({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
           <Text style={styles.buttonText}> Send </Text>
         </TouchableOpacity>
-      </View>
-    </>
+      </KeyboardAvoidingScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 20,
+  },
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
   },

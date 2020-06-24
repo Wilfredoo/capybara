@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 import * as firebase from "firebase";
 
 export default class Login extends Component {
@@ -21,7 +22,7 @@ export default class Login extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingScrollView contentContainerStyle={styles.container}>
         <Text style={styles.greeting}>{`What's up, hot stuff`}</Text>
         <View style={styles.errorMessage}>
           {this.state.errorMessage && (
@@ -69,14 +70,14 @@ export default class Login extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   greeting: {
     marginTop: 32,
