@@ -35,10 +35,17 @@ export default class MessageThread extends Component {
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
   }
 
-  getSender(messageImReplying) {
-    const senderRef = store.doc(`users/${messageImReplying.from}`);
+  getSender(personImReplying) {
+    const senderRef = store.doc(`users/${personImReplying}`);
     senderRef.get().then((doc) => {
       this.setState({ sender: doc.data() });
+    });
+  }
+
+  getPreviousMessage(messageImReplying) {
+    const senderRef = store.doc(`chatRooms/${messageImReplying}`);
+    senderRef.get().then((doc) => {
+      this.setState({ previousMessage: doc.data() }, () => {});
     });
   }
 
@@ -54,8 +61,8 @@ export default class MessageThread extends Component {
           } else {
             this.setState({ data: doc.data(), type: "received" }, () => {});
           }
-
-          this.getSender(doc.data(), currentUser);
+          this.getSender(doc.data().from, currentUser);
+          this.getPreviousMessage(doc.data().inReplyTo);
         } else {
           console.log("No such document!");
         }

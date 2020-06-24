@@ -10,6 +10,7 @@ import moment from "moment";
 import * as firebase from "firebase";
 
 export default function ReceivedMessage({ data, reply }) {
+  console.log("data in received", data);
   const [message, setMessage] = useState(null);
   const store = firebase.firestore();
 
@@ -17,22 +18,34 @@ export default function ReceivedMessage({ data, reply }) {
     <View style={styles.container}>
       {data.data && data.type === "received" && (
         <>
+          {data.previousMessage && data.data.isReply && (
+            <Text>
+              In reply to your message: {"\n"}
+              {data.previousMessage.message}
+              {"\n"}
+            </Text>
+          )}
           <Text style={styles.title}>
             You received this message: {data.data.message}
           </Text>
-          <TextInput
-            multiline={true}
-            numberOfLines={4}
-            placeholder={"send it"}
-            onChangeText={(text) => setMessage(text)}
-            style={styles.input}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => reply(data.data.from, data.data.id, message)}
-          >
-            <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
-          </TouchableOpacity>
+
+          {!data.data.isReply && (
+            <>
+              <TextInput
+                multiline={true}
+                numberOfLines={4}
+                placeholder={"send it"}
+                onChangeText={(text) => setMessage(text)}
+                style={styles.input}
+              />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => reply(data.data.from, data.data.id, message)}
+              >
+                <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </>
       )}
     </View>
