@@ -4,7 +4,7 @@ import moment from "moment";
 
 export default function SentMessage({ data }) {
   return (
-    <View style={styles.container}>
+    <View>
       {data.data && data.type === "sent" && (
         <>
           {!data.data.isReply && (
@@ -14,15 +14,25 @@ export default function SentMessage({ data }) {
             </Text>
           )}
           {data.previousMessage && data.data.isReply && (
-            <Text>
+            <Text style={styles.previousMessage}>
               In reply to: {"\n"}
-              {data.previousMessage.message}
               {"\n"}
+              <Text style={styles.highlight}>
+                {" "}
+                {data.previousMessage.message}
+              </Text>
+              -{" "}
+              <Text style={{ fontStyle: "italic" }}>
+                {moment(data.previousMessage.time).fromNow()}
+              </Text>
             </Text>
           )}
-          <Text>You sent this message: {data.data.message}</Text>
-          <Text style={{ fontStyle: "italic" }}>
-            {moment(data.data.time).fromNow()}
+          <Text style={styles.message}>
+            You sent this message:{"\n"}
+            {"\n"} <Text style={styles.highlight}>{data.data.message}</Text>-{" "}
+            <Text style={{ fontStyle: "italic" }}>
+              {moment(data.data.time).fromNow()}
+            </Text>
           </Text>
         </>
       )}
@@ -31,7 +41,15 @@ export default function SentMessage({ data }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
+  previousMessage: {
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  message: {
+    marginTop: 30,
+    textAlign: "center",
+  },
+  highlight: {
+    fontSize: 20,
   },
 });

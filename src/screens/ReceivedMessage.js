@@ -10,23 +10,36 @@ import moment from "moment";
 import * as firebase from "firebase";
 
 export default function ReceivedMessage({ data, reply }) {
-  console.log("data in received", data);
   const [message, setMessage] = useState(null);
   const store = firebase.firestore();
 
   return (
-    <View style={styles.container}>
+    <View>
       {data.data && data.type === "received" && (
         <>
           {data.previousMessage && data.data.isReply && (
-            <Text>
-              In reply to your message: {"\n"}
-              {data.previousMessage.message}
-              {"\n"}
-            </Text>
+            <>
+              <Text style={styles.previousMessage}>
+                In reply to your message: {"\n"}
+                {"\n"}
+                <Text style={styles.highlight}>
+                  {" "}
+                  {data.previousMessage.message}
+                </Text>
+                -
+                <Text style={{ fontStyle: "italic" }}>
+                  {moment(data.previousMessage.time).fromNow()}
+                </Text>
+              </Text>
+            </>
           )}
-          <Text style={styles.title}>
-            You received this message: {data.data.message}
+          <Text style={styles.message}>
+            You received this message: {"\n"}
+            {"\n"}
+            <Text style={styles.highlight}> {data.data.message}</Text> -{" "}
+            <Text style={{ fontStyle: "italic" }}>
+              {moment(data.data.time).fromNow()}
+            </Text>
           </Text>
 
           {!data.data.isReply && (
@@ -53,10 +66,6 @@ export default function ReceivedMessage({ data, reply }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    top: 60,
-    alignItems: "center",
-  },
   button: {
     marginHorizontal: 30,
     backgroundColor: "#E9446A",
@@ -80,7 +89,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
   },
-  title: {
-    marginBottom: 20,
+  previousMessage: {
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  message: {
+    marginTop: 30,
+    textAlign: "center",
+  },
+  highlight: {
+    fontSize: 20,
   },
 });
