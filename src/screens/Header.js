@@ -23,7 +23,7 @@ export default function Header({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    top: 60,
+    marginTop: 60,
     alignItems: "center",
   },
   flex: {
