@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Header from "./Header";
 import Back from "./Back";
 
@@ -34,6 +34,16 @@ export default function SentConfirmation({ navigation }) {
           {"\n"} Maybe not {"\n"}
           {"\n"}¯\_(ツ)_/¯
         </Text>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("App");
+            }}
+          >
+            <Text style={styles.buttonText}> Go Back </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );
@@ -49,4 +59,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  button: {
+    marginHorizontal: 30,
+    backgroundColor: "#E9446A",
+    borderRadius: 4,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  buttonText: { color: "#FFF", fontWeight: "500", fontSize: 20 },
 });

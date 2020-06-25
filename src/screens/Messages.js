@@ -47,7 +47,6 @@ export default function Messages({ navigation }) {
             }`
           );
           inReplyToRef.get().then((doc) => {
-            console.log("dov.data(", doc.data());
             setInReplyTo(doc.data());
           });
         } else {
@@ -60,12 +59,8 @@ export default function Messages({ navigation }) {
   }, []);
 
   const reply = (senderId, inReplyTo) => {
-    messageRef
-      .doc(receivedMessage.id)
-      .update({ hasReply: true })
-      .then((res) => {
-        console.log(`Document updated at ${res.updateTime}`, res);
-      });
+    messageRef.doc(receivedMessage.id).update({ hasReply: true });
+
     createMessage(message, senderId.uuid, currentUser, true, inReplyTo, false);
   };
 

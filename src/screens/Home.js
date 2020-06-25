@@ -55,7 +55,6 @@ export default function Home({ navigation }) {
       });
 
     createMessage(message, randomUserID, currentUser, false, "nobody", false);
-    console.log("random token to send to", randomUserTOKEN);
     sendNotification("ExponentPushToken[Pbt2WaIatVUIp40N-Dq6gJ]");
     sendNotification(randomUserTOKEN);
 

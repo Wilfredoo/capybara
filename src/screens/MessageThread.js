@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Back from "./Back";
 import Header from "./Header";
 import SentMessage from "./SentMessage";
@@ -26,12 +26,7 @@ export default class MessageThread extends Component {
   }
 
   reply(senderId, inReplyTo, message) {
-    messageRef
-      .doc(inReplyTo)
-      .update({ hasReply: true })
-      .then((res) => {
-        console.log(`Document updated at ${res.updateTime}`, res);
-      });
+    messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
   }
 

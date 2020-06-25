@@ -16,15 +16,6 @@ if (__DEV__) {
 const store = firebase.firestore();
 
 const createMessage = (message, to, from, isReply, inReplyTo, hasReply) => {
-  console.log(
-    "create message called with args: ",
-    message,
-    to,
-    from,
-    isReply,
-    inReplyTo,
-    hasReply
-  );
   const newShortUUID = short.generate();
   store.collection("chatRooms").doc(newShortUUID).set({
     id: newShortUUID,

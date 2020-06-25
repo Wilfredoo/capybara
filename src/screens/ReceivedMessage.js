@@ -26,9 +26,9 @@ export default function ReceivedMessage({ data, reply }) {
                   {" "}
                   {data.previousMessage.message}
                 </Text>
-                -
+                {"\n"} -
                 <Text style={{ fontStyle: "italic" }}>
-                  {moment(data.previousMessage.time).fromNow()}
+                  , {moment(data.previousMessage.time).fromNow()}
                 </Text>
               </Text>
             </>
@@ -36,10 +36,12 @@ export default function ReceivedMessage({ data, reply }) {
           <Text style={styles.message}>
             You received this message: {"\n"}
             {"\n"}
-            <Text style={styles.highlight}> {data.data.message}</Text> -{" "}
-            <Text style={{ fontStyle: "italic" }}>
-              {moment(data.data.time).fromNow()}
-            </Text>
+            <Text style={styles.highlight}> {data.data.message}</Text> {"\n"}-{" "}
+            {data.sender && data.sender.name && (
+              <Text style={{ fontStyle: "italic" }}>
+                {data.sender.name}, {moment(data.data.time).fromNow()}
+              </Text>
+            )}
           </Text>
 
           {!data.data.isReply && (
@@ -47,7 +49,9 @@ export default function ReceivedMessage({ data, reply }) {
               <TextInput
                 multiline={true}
                 numberOfLines={4}
-                placeholder={"send it"}
+                placeholder={
+                  "You can say, for example: Our life is frittered away by detail... simplify, simplify."
+                }
                 onChangeText={(text) => setMessage(text)}
                 style={styles.input}
               />
@@ -81,13 +85,14 @@ const styles = StyleSheet.create({
     borderColor: "#8A8F9E",
     borderWidth: StyleSheet.hairlineWidth,
     height: 140,
-    minWidth: 250,
+    maxWidth: 350,
     fontSize: 15,
     color: "#161F3D",
     borderRadius: 5,
     textAlignVertical: "top",
     paddingLeft: 10,
     paddingTop: 10,
+    marginTop: 40,
   },
   previousMessage: {
     marginBottom: 30,
