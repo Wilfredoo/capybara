@@ -25,7 +25,7 @@
       "supportsTablet": true
     },
     "sdkVersion": "37.0.0",
-    "description": "Send a message and it will arrive to another user at random. Receive a message from someone you don't know and reply to it. That's what this app is about.",
+    "description": "Send a message to someone at random. Receive a message by pure chance. That's what this app is about.",
     "githubUrl": "https://github.com/Wilfredoo/mib"
   }
 }

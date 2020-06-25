@@ -73,8 +73,7 @@ export default function Home({ navigation }) {
         contentContainerStyle={styles.contentContainer}
       >
         <Text style={styles.title}>
-          Send a message and it will arrive to any other user at random. Maybe
-          your neighbour. Maybe some senior citizen in Buenos Aires.
+          Send a message and it will arrive to any other user at random.
         </Text>
         <TextInput
           maxLength={100}
