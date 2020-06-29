@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ToastAndroid } from "react-native";
 import Back from "./Back";
 import Header from "./Header";
 import SentMessage from "./SentMessage";
@@ -26,9 +26,17 @@ export default class MessageThread extends Component {
     this.getMessage(currentUser);
   }
 
+  showToast = () => {
+    ToastAndroid.show(
+      "Message reply sent, Hope you will hear back soon...",
+      ToastAndroid.SHORT
+    );
+  };
+
   reply(senderId, inReplyTo, message) {
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
+    this.showToast();
   }
 
   getSender(personImReplying) {
