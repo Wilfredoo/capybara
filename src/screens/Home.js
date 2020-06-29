@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  ToastAndroid,
 } from "react-native";
 import * as firebase from "firebase";
 import Header from "./Header";
@@ -22,6 +23,13 @@ export default function Home({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const usersRef = store.collection("users");
+
+  const showToast = () => {
+    ToastAndroid.show(
+      "Message reply sent, Hope you will hear back soon...",
+      ToastAndroid.SHORT
+    );
+  };
 
   useEffect(() => {
     registerToken(currentUser);
@@ -58,8 +66,8 @@ export default function Home({ navigation }) {
       });
 
     createMessage(message, randomUserID, currentUser, false, "nobody", false);
-    sendNotification("ExponentPushToken[Pbt2WaIatVUIp40N-Dq6gJ]");
-    sendNotification(randomUserTOKEN);
+    sendNotification("ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]", message);
+    sendNotification(randomUserTOKEN, message);
 
     navigation.navigate("Sent", {
       message: message,

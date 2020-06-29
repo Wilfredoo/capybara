@@ -1,4 +1,4 @@
-const sendNotification = (tokenToSend) => {
+const sendNotification = (tokenToSend, messageBody = "") => {
   fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
@@ -9,7 +9,7 @@ const sendNotification = (tokenToSend) => {
       to: tokenToSend,
       sound: "default",
       title: "Someone sent you a message. Lucky you.",
-      body: "Someone sent you a message. Isn't life cool?",
+      body: messageBody,
     }),
   });
 };
