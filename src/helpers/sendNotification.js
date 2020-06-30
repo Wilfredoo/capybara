@@ -10,6 +10,7 @@ const sendNotification = (tokenToSend, messageBody = "") => {
       sound: "default",
       title: "Someone sent you a message. Lucky you.",
       body: messageBody,
+      data: { message: messageBody },
     }),
   });
 };
