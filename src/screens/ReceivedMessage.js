@@ -14,7 +14,7 @@ export default function ReceivedMessage({ data, reply }) {
   const store = firebase.firestore();
 
   return (
-    <View>
+    <View style={styles.buttonsContainer}>
       {data.data && data.type === "received" && (
         <>
           {data.previousMessage && data.data.isReply && (
@@ -50,16 +50,31 @@ export default function ReceivedMessage({ data, reply }) {
                 multiline={true}
                 numberOfLines={4}
                 placeholder={
-                  "You can say, for example: Our life is frittered away by detail... simplify, simplify."
+                  "E.g. our life is frittered away by detail... simplify, simplify."
                 }
                 onChangeText={(text) => setMessage(text)}
                 style={styles.input}
               />
               <TouchableOpacity
-                style={styles.button}
+                style={styles.replyButton}
                 onPress={() => reply(data.data.from, data.data.id, message)}
               >
                 <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.forgetButton}
+                onPress={() => forget()}
+              >
+                <Text style={{ color: "#204051", fontWeight: "500" }}>
+                  Forget
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => report()}>
+                <Text
+                  style={{ color: "#204051", fontWeight: "500", marginTop: 30 }}
+                >
+                  Report
+                </Text>
               </TouchableOpacity>
             </>
           )}
@@ -70,17 +85,33 @@ export default function ReceivedMessage({ data, reply }) {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    marginHorizontal: 30,
+  buttonsContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  replyButton: {
     backgroundColor: "#E9446A",
     borderRadius: 4,
     height: 52,
     alignItems: "center",
     justifyContent: "center",
-    margin: 30,
+    marginTop: 30,
     paddingLeft: 30,
     paddingRight: 30,
+    width: 300,
   },
+  forgetButton: {
+    backgroundColor: "#e7dfd5",
+    borderRadius: 4,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
+    width: 300,
+  },
+
   input: {
     borderColor: "#8A8F9E",
     borderWidth: StyleSheet.hairlineWidth,

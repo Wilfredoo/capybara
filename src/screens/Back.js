@@ -12,7 +12,7 @@ export default function Back({ navigation, where }) {
         style={{ position: "absolute", top: 65, left: 20 }}
         name="arrow-left"
         size={30}
-        color="green"
+        color="#204051"
         onPress={back}
       />
     </View>

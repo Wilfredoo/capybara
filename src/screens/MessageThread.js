@@ -10,7 +10,6 @@ import createMessage from "../helpers/createMessage";
 const store = firebase.firestore();
 const messageRef = store.collection("chatRooms");
 let currentUser = null;
-
 export default class MessageThread extends Component {
   constructor() {
     super();
@@ -28,6 +27,15 @@ export default class MessageThread extends Component {
   reply(senderId, inReplyTo, message) {
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
+  }
+
+  forget(id) {
+    console.log("forget it", id);
+    messageRef.doc(id).update({ forgotten: true });
+  }
+
+  report(senderId, inReplyTo, message) {
+    console.log("report");
   }
 
   getSender(personImReplying) {
@@ -73,13 +81,12 @@ export default class MessageThread extends Component {
         <Back navigation={this.props.navigation} where="History" />
         <Header navigation={this.props.navigation} />
         <View style={styles.container}>
-          {/* sent messages - without reply */}
           <SentMessage data={this.state} />
-
-          {/* received messages with reply*/}
-          <ReceivedMessage data={this.state} reply={this.reply} />
-
-          {/* received messages without reply*/}
+          <ReceivedMessage
+            data={this.state}
+            reply={this.reply}
+            forget={this.forget}
+          />
         </View>
       </>
     );

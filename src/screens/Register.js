@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
-
+const short = require('short-uuid');
 import * as firebase from "firebase";
-
 export default class Register extends Component {
   state = {
     name: "",
@@ -14,26 +13,36 @@ export default class Register extends Component {
   };
 
   handleRegister = async () => {
-    firebase
+    const credentials = await this.createUser()
+    await this.saveUser(credentials.user.uid)
+    this.updateProfile(credentials)
+  }
+
+  createUser = async () => {
+    return firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((userCredentials) => {
-        firebase
+  };
+
+  saveUser = async(uid) => {
+         return firebase
           .firestore()
           .collection("users")
-          .doc(firebase.auth().currentUser.uid)
+          .doc(uid)
           .set({
             email: this.state.email,
             password: this.state.password,
             name: this.state.name,
-            uuid: firebase.auth().currentUser.uid,
+            uuid: uid,
           });
-        return userCredentials.user.updateProfile({
-          displayName: this.state.name,
-        });
-      })
-      .catch((error) => this.setState({ errorMessage: error.message }));
-  };
+  }
+
+  updateProfile = (userCredentials) => {
+    return userCredentials.user.updateProfile({
+      displayName: this.state.name,
+    });
+  }
+
 
   render() {
     return (

@@ -6,7 +6,6 @@ import History from "./src/screens/History";
 import Profile from "./src/screens/Profile";
 import SentConfirmation from "./src/screens/SentConfirmation";
 import Home from "./src/screens/Home";
-import Messages from "./src/screens/Messages";
 import MessageThread from "./src/screens/MessageThread";
 import firebaseConfigDEV from "./config/FirebaseConfigDEV";
 import firebaseConfigPROD from "./config/FirebaseConfigPROD";

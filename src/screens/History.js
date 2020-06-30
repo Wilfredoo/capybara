@@ -69,7 +69,6 @@ export default function History({ navigation }) {
             {messagesArray &&
               messagesArray[0] !== "one element" &&
               messagesArray.map((data, i) => {
-                console.log("data has reply", data.hasReply);
                 return (
                   <TouchableOpacity onPress={() => seeMessage(data.id)}>
                     <View style={styles.historyUnit} key={i}>
