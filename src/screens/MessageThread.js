@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ToastAndroid } from "react-native";
 import Back from "./Back";
 import Header from "./Header";
 import SentMessage from "./SentMessage";
 import * as firebase from "firebase";
 import ReceivedMessage from "./ReceivedMessage";
 import createMessage from "../helpers/createMessage";
+import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 
 const store = firebase.firestore();
 const messageRef = store.collection("chatRooms");
@@ -24,9 +25,17 @@ export default class MessageThread extends Component {
     this.getMessage(currentUser);
   }
 
+  showToast = () => {
+    ToastAndroid.show(
+      "Message reply sent, Hope you will hear back soon...",
+      ToastAndroid.SHORT
+    );
+  };
+
   reply(senderId, inReplyTo, message) {
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
+    this.showToast();
   }
 
   forget(id) {
@@ -77,7 +86,7 @@ export default class MessageThread extends Component {
 
   render() {
     return (
-      <>
+      <KeyboardAvoidingScrollView>
         <Back navigation={this.props.navigation} where="History" />
         <Header navigation={this.props.navigation} />
         <View style={styles.container}>
@@ -88,7 +97,7 @@ export default class MessageThread extends Component {
             forget={this.forget}
           />
         </View>
-      </>
+      </KeyboardAvoidingScrollView>
     );
   }
 }

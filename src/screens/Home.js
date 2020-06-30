@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  ToastAndroid,
 } from "react-native";
 import * as firebase from "firebase";
 import Header from "./Header";
@@ -13,6 +14,7 @@ import "firebase/firestore";
 import createMessage from "../helpers/createMessage.js";
 import registerToken from "../helpers/registerNotification.js";
 import sendNotification from "../helpers/sendNotification.js";
+import { Notifications } from "expo";
 
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 
@@ -23,8 +25,25 @@ export default function Home({ navigation }) {
   const store = firebase.firestore();
   const usersRef = store.collection("users");
 
+  const showToast = () => {
+    ToastAndroid.show(
+      "Message reply sent, Someone will reply...",
+      ToastAndroid.SHORT
+    );
+  };
+
+  const handleNotification = (notification) => {
+    const { message } = notification;
+
+    navigation.navigate("History", {
+      message,
+    });
+  };
+
   useEffect(() => {
     registerToken(currentUser);
+
+    Notifications.addListener(handleNotification);
   }, []);
 
   const sendMessage = async () => {
@@ -58,12 +77,9 @@ export default function Home({ navigation }) {
       });
 
     createMessage(message, randomUserID, currentUser, false, "nobody", false);
-    sendNotification("ExponentPushToken[Pbt2WaIatVUIp40N-Dq6gJ]");
-    sendNotification(randomUserTOKEN);
-
-    navigation.navigate("Sent", {
-      message: message,
-    });
+    sendNotification("ExponentPushToken[BGI-B-P1_cMWVHxQAzqwsO]", message);
+    sendNotification(randomUserTOKEN, message);
+    showToast();
   };
 
   return (

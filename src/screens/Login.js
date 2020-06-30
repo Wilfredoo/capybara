@@ -36,7 +36,9 @@ export default class Login extends Component {
             <TextInput
               style={styles.input}
               autoCapitalize="none"
-              onChangeText={(email) => this.setState({ email })}
+              onChangeText={(email) =>
+                this.setState({ email: String(email).trim() })
+              }
               value={this.state.email}
             ></TextInput>
           </View>
