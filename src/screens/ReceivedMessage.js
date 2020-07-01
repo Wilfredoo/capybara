@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -12,6 +12,16 @@ import * as firebase from "firebase";
 export default function ReceivedMessage({ data, reply }) {
   const [message, setMessage] = useState(null);
   const store = firebase.firestore();
+
+  replyAndClear = async(senderId, inReplyTo, message) => {
+    await reply(senderId, inReplyTo, message)
+    clearInput()
+  }
+
+  clearInput = () => {
+    setMessage("should be null")
+  }
+
 
   return (
     <View style={styles.buttonsContainer}>
@@ -57,7 +67,7 @@ export default function ReceivedMessage({ data, reply }) {
               />
               <TouchableOpacity
                 style={styles.replyButton}
-                onPress={() => reply(data.data.from, data.data.id, message)}
+                onPress={() => replyAndClear(data.data.from, data.data.id, message)}
               >
                 <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
               </TouchableOpacity>

@@ -10,14 +10,24 @@ import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scrol
 
 const store = firebase.firestore();
 const messageRef = store.collection("chatRooms");
+
+const showToast = () => {
+  console.log("show toeast heres")
+  ToastAndroid.show(
+    "Message reply sent, let's just hope they'll reply...",
+    ToastAndroid.SHORT
+  );
+};
 let currentUser = null;
 export default class MessageThread extends Component {
   constructor() {
     super();
+
     this.state = {
       data: null,
       type: null,
     };
+
   }
 
   componentDidMount() {
@@ -25,17 +35,12 @@ export default class MessageThread extends Component {
     this.getMessage(currentUser);
   }
 
-  showToast = () => {
-    ToastAndroid.show(
-      "Message reply sent, let's just hope they'll reply...",
-      ToastAndroid.SHORT
-    );
-  };
-
   reply(senderId, inReplyTo, message) {
+    console.log("reply", senderId, inReplyTo, message)
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
-    this.showToast();
+    showToast()
+
   }
 
   forget(id) {

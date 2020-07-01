@@ -22,7 +22,6 @@ export default function Home({ navigation }) {
   const [error, setError] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
-  const usersRef = store.collection("users");
 
   const showToast = () => {
     ToastAndroid.show(
@@ -33,15 +32,15 @@ export default function Home({ navigation }) {
 
   const handleNotification = (notification) => {
     const { message } = notification;
-
+    console.log("navigate to history!!!")
     navigation.navigate("History", {
       message
     })
   };
 
   useEffect(() => {
+    console.log("home use effect")
     registerToken(currentUser);
-
     Notifications.addListener(handleNotification);
   }, []);
 
@@ -75,9 +74,10 @@ export default function Home({ navigation }) {
         console.log("Error getting documents: ", error);
       });
 
-    createMessage(message, randomUserID, currentUser, false, "nobody", false);
-    sendNotification(randomUserTOKEN, message);
-    showToast();
+    await createMessage(message, randomUserID, currentUser, false, "nobody", false);
+    await showToast();
+    await sendNotification(randomUserTOKEN, message);
+    setMessage("")
   };
 
   return (

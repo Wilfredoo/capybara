@@ -12,15 +12,20 @@ import moment from "moment";
 import { Feather } from "@expo/vector-icons";
 import Header from "./Header";
 import { useIsFocused } from '@react-navigation/native';
-
+import { Notifications } from "expo";
 
 export default function History({ navigation }) {
-
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const [messagesArray, setMessagesArray] = useState(["one element"]);
 
-
+  const handleNotification = (notification) => {
+    const { message } = notification;
+    console.log("navigate to history!!!")
+    navigation.navigate("History", {
+      message
+    })
+  };
 
   useEffect(() => {
     getAllMessages().then((result) => {
@@ -28,10 +33,11 @@ export default function History({ navigation }) {
       result.forEach((docSnapshot) => {
         messagesResult.push(docSnapshot.data());
       });
-      // console.log("messagesresult", messagesResult)
       const sortedMessages = messagesResult.sort(compare)
       setMessagesArray(sortedMessages);
     });
+    Notifications.addListener(handleNotification);
+    
   }, []);
 
   const chatRoomsRef = store.collection("chatRooms");
@@ -64,9 +70,6 @@ export default function History({ navigation }) {
   };
 
   function compare( a, b ) {
-    console.log("a", a.time)
-    console.log("b", b.time)
-
     if ( a.time > b.time ){
       return -1;
     }
