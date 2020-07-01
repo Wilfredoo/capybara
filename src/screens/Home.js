@@ -15,7 +15,6 @@ import createMessage from "../helpers/createMessage.js";
 import registerToken from "../helpers/registerNotification.js";
 import sendNotification from "../helpers/sendNotification.js";
 import { Notifications } from "expo";
-
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 
 export default function Home({ navigation }) {
@@ -36,8 +35,8 @@ export default function Home({ navigation }) {
     const { message } = notification;
 
     navigation.navigate("History", {
-      message,
-    });
+      message
+    })
   };
 
   useEffect(() => {
@@ -77,7 +76,6 @@ export default function Home({ navigation }) {
       });
 
     createMessage(message, randomUserID, currentUser, false, "nobody", false);
-    sendNotification("ExponentPushToken[BGI-B-P1_cMWVHxQAzqwsO]", message);
     sendNotification(randomUserTOKEN, message);
     showToast();
   };

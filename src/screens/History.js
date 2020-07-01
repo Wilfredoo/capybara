@@ -11,11 +11,16 @@ import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { Feather } from "@expo/vector-icons";
 import Header from "./Header";
+import { useIsFocused } from '@react-navigation/native';
+
 
 export default function History({ navigation }) {
+
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const [messagesArray, setMessagesArray] = useState(["one element"]);
+
+
 
   useEffect(() => {
     getAllMessages().then((result) => {
@@ -23,7 +28,9 @@ export default function History({ navigation }) {
       result.forEach((docSnapshot) => {
         messagesResult.push(docSnapshot.data());
       });
-      setMessagesArray(messagesResult);
+      // console.log("messagesresult", messagesResult)
+      const sortedMessages = messagesResult.sort(compare)
+      setMessagesArray(sortedMessages);
     });
   }, []);
 
@@ -31,13 +38,15 @@ export default function History({ navigation }) {
 
   async function getAllMessages() {
     const sentSnapshot = await chatRoomsRef
-      .orderBy("time", "desc")
+    .limit(10)
+    .orderBy("time", "desc")
       .where("from", "==", currentUser)
       .where("hasReply", "==", false)
       .get();
 
     const receivedSnapshot = await chatRoomsRef
-      .orderBy("time", "desc")
+    .limit(10)
+    .orderBy("time", "desc")
       .where("to", "==", currentUser)
       .where("hasReply", "==", false)
       .get();
@@ -54,6 +63,19 @@ export default function History({ navigation }) {
     });
   };
 
+  function compare( a, b ) {
+    console.log("a", a.time)
+    console.log("b", b.time)
+
+    if ( a.time > b.time ){
+      return -1;
+    }
+    if ( a.time < b.time ){
+      return 1;
+    }
+    return 0;
+  }
+
   return (
     <>
       <Header navigation={navigation} where={"History"} />
@@ -64,11 +86,11 @@ export default function History({ navigation }) {
         {messagesArray.length === 1 && messagesArray[0] === "one element" && (
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
-        <View style={styles.historyView}>
-          <ScrollView>
+          <ScrollView style={styles.historyView}>
             {messagesArray &&
               messagesArray[0] !== "one element" &&
               messagesArray.map((data, i) => {
+                // console.log("data, data", messagesArray)
                 return (
                   <TouchableOpacity onPress={() => seeMessage(data.id)}>
                     <View style={styles.historyUnit} key={i}>
@@ -96,7 +118,6 @@ export default function History({ navigation }) {
                 );
               })}
           </ScrollView>
-        </View>
       </View>
     </>
   );
@@ -110,9 +131,7 @@ const styles = StyleSheet.create({
   },
   historyView: {
     width: 350,
-    marginTop: 40,
-    position: "absolute",
-    top: 80,
+    marginTop: 30,
   },
 
   flex: {

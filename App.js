@@ -4,7 +4,6 @@ import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
 import History from "./src/screens/History";
 import Profile from "./src/screens/Profile";
-import SentConfirmation from "./src/screens/SentConfirmation";
 import Home from "./src/screens/Home";
 import MessageThread from "./src/screens/MessageThread";
 import firebaseConfigDEV from "./config/FirebaseConfigDEV";
@@ -110,7 +109,6 @@ export default createAppContainer(
       Loading: Loading,
       App: DashboardTabNavigator,
       Auth: AuthStack,
-      Sent: SentConfirmation,
       MessageThread: MessageThread,
     },
     {

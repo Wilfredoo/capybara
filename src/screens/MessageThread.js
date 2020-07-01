@@ -27,7 +27,7 @@ export default class MessageThread extends Component {
 
   showToast = () => {
     ToastAndroid.show(
-      "Message reply sent, Hope you will hear back soon...",
+      "Message reply sent, let's just hope they'll reply...",
       ToastAndroid.SHORT
     );
   };
