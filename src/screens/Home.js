@@ -32,14 +32,12 @@ export default function Home({ navigation }) {
 
   const handleNotification = (notification) => {
     const { message } = notification;
-    console.log("navigate to history!!!")
     navigation.navigate("History", {
       message
     })
   };
 
   useEffect(() => {
-    console.log("home use effect")
     registerToken(currentUser);
     Notifications.addListener(handleNotification);
   }, []);

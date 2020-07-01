@@ -12,7 +12,6 @@ const store = firebase.firestore();
 const messageRef = store.collection("chatRooms");
 
 const showToast = () => {
-  console.log("show toeast heres")
   ToastAndroid.show(
     "Message reply sent, let's just hope they'll reply...",
     ToastAndroid.SHORT
@@ -36,7 +35,6 @@ export default class MessageThread extends Component {
   }
 
   reply(senderId, inReplyTo, message) {
-    console.log("reply", senderId, inReplyTo, message)
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
     showToast()

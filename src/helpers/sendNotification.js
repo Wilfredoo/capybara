@@ -1,5 +1,4 @@
 const sendNotification = (tokenToSend, messageBody = "") => {
-  console.log("send noti", messageBody, tokenToSend)
   fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
