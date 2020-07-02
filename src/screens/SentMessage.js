@@ -43,6 +43,7 @@ export default function SentMessage({ data }) {
 }
 
 const styles = StyleSheet.create({
+
   previousMessage: {
     marginBottom: 30,
     textAlign: "center",

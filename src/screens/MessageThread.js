@@ -89,24 +89,28 @@ export default class MessageThread extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingScrollView>
+        <View style={styles.container}>
         <Back navigation={this.props.navigation} where="History" />
         <Header navigation={this.props.navigation} />
-        <View style={styles.container}>
+      <KeyboardAvoidingScrollView contentContainerStyle={styles.contentContainer}>
           <SentMessage data={this.state} />
           <ReceivedMessage
             data={this.state}
             reply={this.reply}
             forget={this.forget}
           />
-        </View>
       </KeyboardAvoidingScrollView>
+        </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    paddingBottom: 20,
+  },
+  contentContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
