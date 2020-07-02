@@ -9,12 +9,15 @@ import {
 import moment from "moment";
 import * as firebase from "firebase";
 
-export default function ReceivedMessage({ data, reply }) {
+export default function ReceivedMessage({ data, reply, navigation }) {
   const [message, setMessage] = useState(null);
   const store = firebase.firestore();
 
   replyAndClear = async(senderId, inReplyTo, message) => {
     await reply(senderId, inReplyTo, message)
+    navigation.navigate("History", {
+      message
+    })
     clearInput()
   }
 
@@ -121,7 +124,6 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     width: 300,
   },
-
   input: {
     borderColor: "#8A8F9E",
     borderWidth: StyleSheet.hairlineWidth,

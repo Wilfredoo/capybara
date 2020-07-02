@@ -19,13 +19,7 @@ export default function History({ navigation }) {
   const store = firebase.firestore();
   const [messagesArray, setMessagesArray] = useState(["one element"]);
 
-  const handleNotification = (notification) => {
-    const { message } = notification;
-    console.log("navigate to history!!!")
-    navigation.navigate("History", {
-      message
-    })
-  };
+
 
   useEffect(() => {
     getAllMessages().then((result) => {
@@ -36,8 +30,6 @@ export default function History({ navigation }) {
       const sortedMessages = messagesResult.sort(compare)
       setMessagesArray(sortedMessages);
     });
-    Notifications.addListener(handleNotification);
-    
   }, []);
 
   const chatRoomsRef = store.collection("chatRooms");

@@ -30,16 +30,8 @@ export default function Home({ navigation }) {
     );
   };
 
-  const handleNotification = (notification) => {
-    const { message } = notification;
-    navigation.navigate("History", {
-      message
-    })
-  };
-
   useEffect(() => {
     registerToken(currentUser);
-    Notifications.addListener(handleNotification);
   }, []);
 
   const sendMessage = async () => {
@@ -75,6 +67,9 @@ export default function Home({ navigation }) {
     await createMessage(message, randomUserID, currentUser, false, "nobody", false);
     await showToast();
     await sendNotification(randomUserTOKEN, message);
+   await navigation.navigate("History", {
+      message
+    })
     setMessage("")
   };
 
@@ -98,8 +93,8 @@ export default function Home({ navigation }) {
           style={styles.input}
         />
         {error === "empty" && (
-          <Text style={{ marginBottom: 18 }}>
-            You can't leave this field empty. That's, like, the only rule
+          <Text style={styles.error}>
+            Comon you can't leave this field empty. That's, like, the only rule
             dawg...
           </Text>
         )}
@@ -152,4 +147,5 @@ const styles = StyleSheet.create({
     paddingRight: 30,
   },
   buttonText: { color: "#FFF", fontWeight: "500", fontSize: 20 },
+  error: { marginBottom: 18, width: 350, textAlign: "center", color: "red" }
 });

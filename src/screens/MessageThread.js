@@ -26,7 +26,6 @@ export default class MessageThread extends Component {
       data: null,
       type: null,
     };
-
   }
 
   componentDidMount() {
@@ -38,6 +37,7 @@ export default class MessageThread extends Component {
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
     showToast()
+  
 
   }
 
@@ -98,6 +98,7 @@ export default class MessageThread extends Component {
             data={this.state}
             reply={this.reply}
             forget={this.forget}
+            navigation={this.props.navigation}
           />
       </KeyboardAvoidingScrollView>
         </View>
