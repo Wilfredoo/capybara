@@ -22,9 +22,7 @@ export default function Home({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const chatRoomsRef = store.collection("chatRooms");
-  // const oneHour = 60 * 60 * 1000
-  const oneHour = 10000
-
+  const oneHour = 60 * 60 * 1000
 
   const showToast = () => {
     ToastAndroid.show(
