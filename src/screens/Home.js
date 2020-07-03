@@ -17,12 +17,13 @@ import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scrol
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
+  const [isProgressing, setProgressing] = useState(null);
   const [lastSent, setLastSent] = useState(null);
   const [error, setError] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const chatRoomsRef = store.collection("chatRooms");
-  const oneHour = 60 * 60 * 1000
+  const oneHour = 60 * 60 * 1000;
 
   const showToast = () => {
     ToastAndroid.show(
@@ -34,7 +35,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     getSentMessages().then((result) => {
       result.forEach((docSnapshot) => {
-        setLastSent(docSnapshot.data().time)
+        setLastSent(docSnapshot.data().time);
       });
     });
     registerToken(currentUser);
@@ -42,11 +43,11 @@ export default function Home({ navigation }) {
 
   getSentMessages = async () => {
     const sentSnapshot = await chatRoomsRef
-      .limit(1) 
+      .limit(1)
       .orderBy("time", "desc")
       .where("from", "==", currentUser)
       .get();
-    return sentSnapshot
+    return sentSnapshot;
   };
 
   const sendMessage = async () => {
@@ -56,9 +57,9 @@ export default function Home({ navigation }) {
     let randomUserTOKEN = "no other users";
     let indexe;
 
-    if (message === "") return setError("empty")
-   else if (lastSent < oneHour) return setError("time")
-
+    if (message === "") return setError("empty");
+    else if (lastSent < oneHour) return setError("time");
+    setProgressing(true);
     await store
       .collection("users")
       .get()
@@ -73,9 +74,11 @@ export default function Home({ navigation }) {
         randomUser = users[Math.floor(Math.random() * users.length)];
         randomUserID = randomUser.id;
         randomUserTOKEN = randomUser.data().pushToken;
+        setProgressing(false);
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
+        setProgressing(false);
       });
 
     await createMessage(
@@ -121,10 +124,17 @@ export default function Home({ navigation }) {
         )}
         {error === "time" && (
           <Text style={styles.error}>
-           You sent a message just now. Maybe wait a bit.
+            You sent a message just now. Maybe wait a bit.
           </Text>
         )}
-        <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: isProgressing ? "#ccc" : "#E9446A" },
+          ]}
+          onPress={() => sendMessage()}
+          disabled={isProgressing}
+        >
           <Text style={styles.buttonText}> Send </Text>
         </TouchableOpacity>
       </KeyboardAvoidingScrollView>
