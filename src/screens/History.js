@@ -11,15 +11,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { Feather } from "@expo/vector-icons";
 import Header from "./Header";
-import { useIsFocused } from '@react-navigation/native';
-import { Notifications } from "expo";
 
 export default function History({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const [messagesArray, setMessagesArray] = useState(["one element"]);
-
-
 
   useEffect(() => {
     getAllMessages().then((result) => {

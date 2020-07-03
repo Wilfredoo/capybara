@@ -37,8 +37,6 @@ export default class MessageThread extends Component {
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
     showToast()
-  
-
   }
 
   forget(id) {

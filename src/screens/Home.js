@@ -5,7 +5,6 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
   ToastAndroid,
 } from "react-native";
 import * as firebase from "firebase";
@@ -14,14 +13,18 @@ import "firebase/firestore";
 import createMessage from "../helpers/createMessage.js";
 import registerToken from "../helpers/registerNotification.js";
 import sendNotification from "../helpers/sendNotification.js";
-import { Notifications } from "expo";
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
+  const [lastSent, setLastSent] = useState(null);
   const [error, setError] = useState("");
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
+  const chatRoomsRef = store.collection("chatRooms");
+  // const oneHour = 60 * 60 * 1000
+  const oneHour = 10000
+
 
   const showToast = () => {
     ToastAndroid.show(
@@ -31,8 +34,22 @@ export default function Home({ navigation }) {
   };
 
   useEffect(() => {
+    getSentMessages().then((result) => {
+      result.forEach((docSnapshot) => {
+        setLastSent(docSnapshot.data().time)
+      });
+    });
     registerToken(currentUser);
   }, []);
+
+  getSentMessages = async () => {
+    const sentSnapshot = await chatRoomsRef
+      .limit(1) 
+      .orderBy("time", "desc")
+      .where("from", "==", currentUser)
+      .get();
+    return sentSnapshot
+  };
 
   const sendMessage = async () => {
     let users;
@@ -41,9 +58,8 @@ export default function Home({ navigation }) {
     let randomUserTOKEN = "no other users";
     let indexe;
 
-    if (message === "") {
-      return setError("empty");
-    }
+    if (message === "") return setError("empty")
+   else if (lastSent < oneHour) return setError("time")
 
     await store
       .collection("users")
@@ -64,13 +80,20 @@ export default function Home({ navigation }) {
         console.log("Error getting documents: ", error);
       });
 
-    await createMessage(message, randomUserID, currentUser, false, "nobody", false);
+    await createMessage(
+      message,
+      randomUserID,
+      currentUser,
+      false,
+      "nobody",
+      false
+    );
     await showToast();
     await sendNotification(randomUserTOKEN, message);
-   await navigation.navigate("History", {
-      message
-    })
-    setMessage("")
+    await navigation.navigate("History", {
+      message,
+    });
+    setMessage("");
   };
 
   return (
@@ -94,8 +117,13 @@ export default function Home({ navigation }) {
         />
         {error === "empty" && (
           <Text style={styles.error}>
-            Comon you can't leave this field empty. That's, like, the only rule
-            dawg...
+            Comon you can't leave this field empty. That's, like, the only
+            rule...
+          </Text>
+        )}
+        {error === "time" && (
+          <Text style={styles.error}>
+           You sent a message just now. Maybe wait a bit.
           </Text>
         )}
         <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
@@ -147,5 +175,5 @@ const styles = StyleSheet.create({
     paddingRight: 30,
   },
   buttonText: { color: "#FFF", fontWeight: "500", fontSize: 20 },
-  error: { marginBottom: 18, width: 350, textAlign: "center", color: "red" }
+  error: { marginBottom: 18, width: 350, textAlign: "center", color: "red" },
 });
