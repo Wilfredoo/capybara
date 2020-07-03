@@ -1,12 +1,16 @@
 {
   "expo": {
-    "name": "Message in a Bottle - App",
+    "name": "MIB App",
     "slug": "message-in-a-bottle-app",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
+    "android": {
+      "package": "com.octopusprojects.mibapp",
+      "versionCode": 1
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

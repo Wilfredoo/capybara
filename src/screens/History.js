@@ -15,7 +15,6 @@ import Header from "./Header";
 export default function History({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
-  const [newMessage, setNewMessage] = useState(null);
   const [messagesArray, setMessagesArray] = useState(["one element"]);
   const chatRoomsRef = store.collection("chatRooms");
 
@@ -79,9 +78,9 @@ export default function History({ navigation }) {
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
         <ScrollView style={styles.historyView}>
-          <Text>
+         {navigation.state.params &&<Text>
            Last message sent: {JSON.stringify(navigation.getParam("message", "No new message"))}
-          </Text>
+          </Text>}
           {messagesArray &&
             messagesArray[0] !== "one element" &&
             messagesArray.map((data, i) => {

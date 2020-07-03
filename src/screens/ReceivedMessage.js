@@ -25,7 +25,6 @@ export default function ReceivedMessage({ data, reply, navigation }) {
     setMessage("should be null")
   }
 
-
   return (
     <View style={styles.buttonsContainer}>
       {data.data && data.type === "received" && (
@@ -74,7 +73,7 @@ export default function ReceivedMessage({ data, reply, navigation }) {
               >
                 <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.forgetButton}
                 onPress={() => forget()}
               >
@@ -88,7 +87,7 @@ export default function ReceivedMessage({ data, reply, navigation }) {
                 >
                   Report
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </>
           )}
         </>
