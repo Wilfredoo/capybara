@@ -18,11 +18,14 @@ import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scrol
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
   const [lastSent, setLastSent] = useState(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const chatRoomsRef = store.collection("chatRooms");
-  const oneHour = 60 * 60 * 1000
+
+  useEffect(() => {
+    registerToken(currentUser);
+  }, []);
 
   const showToast = () => {
     ToastAndroid.show(
@@ -31,22 +34,13 @@ export default function Home({ navigation }) {
     );
   };
 
-  useEffect(() => {
-    getSentMessages().then((result) => {
-      result.forEach((docSnapshot) => {
-        setLastSent(docSnapshot.data().time)
-      });
-    });
-    registerToken(currentUser);
-  }, []);
-
   getSentMessages = async () => {
     const sentSnapshot = await chatRoomsRef
-      .limit(1) 
+      .limit(1)
       .orderBy("time", "desc")
       .where("from", "==", currentUser)
       .get();
-    return sentSnapshot
+    return sentSnapshot;
   };
 
   const sendMessage = async () => {
@@ -55,9 +49,19 @@ export default function Home({ navigation }) {
     let randomUserID = "no other users";
     let randomUserTOKEN = "no other users";
     let indexe;
+    const pause = 6000;
+    const now = new Date().getTime();
+    if (message === "") return setError("empty");
+    else if (lastSent !== null && lastSent + pause < now) {
+      console.log("shall just send message again")
+    } else if (lastSent !== null) {
+      console.log("lastsent", lastSent)
+      console.log("nownowww", now)
 
-    if (message === "") return setError("empty")
-   else if (lastSent < oneHour) return setError("time")
+      console.log('oh no, shall not send message, too quick!')
+      setError("time");
+      return;
+    }
 
     await store
       .collection("users")
@@ -86,6 +90,7 @@ export default function Home({ navigation }) {
       "nobody",
       false
     );
+    await setLastSent(new Date().getTime())
     await showToast();
     await sendNotification(randomUserTOKEN, message);
     await navigation.navigate("History", {
@@ -121,7 +126,7 @@ export default function Home({ navigation }) {
         )}
         {error === "time" && (
           <Text style={styles.error}>
-           You sent a message just now. Maybe wait a bit.
+            You sent a message just now. Maybe wait a bit.
           </Text>
         )}
         <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
