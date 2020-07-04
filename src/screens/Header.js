@@ -8,12 +8,12 @@ export default function Header({ navigation }) {
         <View style={styles.flex}>
           <Image
             style={{ width: 40, height: 40 }}
-            source={require("../../assets/splash.png")}
+            source={require("../../assets/bottle.png")}
           />
-          <Text style={{ margin: 7 }}>Message in a bottle</Text>
+          <Text style={{ marginBottom: 12 }}>Message in a bottle</Text>
           <Image
             style={{ width: 40, height: 40 }}
-            source={require("../../assets/splash.png")}
+            source={require("../../assets/bottle.png")}
           />
         </View>
       </TouchableOpacity>
@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
   },
   flex: {
     flexDirection: "row",
-    // justifyContent: "flex-end",
     alignItems: "flex-end",
   },
 });
