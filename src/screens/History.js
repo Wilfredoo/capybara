@@ -27,7 +27,9 @@ export default function History({ navigation }) {
       const sortedMessages = messagesResult.sort(compare);
       setMessagesArray(sortedMessages);
     });
-  }, []);
+  }, [navigation]);
+
+
 
   async function getAllMessages() {
     const sentSnapshot = await chatRoomsRef
@@ -70,17 +72,21 @@ export default function History({ navigation }) {
     <>
       <Header navigation={navigation} where={"History"} />
       <View style={styles.container}>
-        {messagesArray.length === 0 && (
-          <Text>You have received no messages yet</Text>
-        )}
-
+        <View>
+          {messagesArray.length === 0 && (
+            <Text>You have received no messages yet</Text>
+          )}
+        </View>
         {messagesArray.length === 1 && messagesArray[0] === "one element" && (
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
         <ScrollView style={styles.historyView}>
-         {navigation.state.params &&<Text>
-           Last message sent: {JSON.stringify(navigation.getParam("message", "No new message"))}
-          </Text>}
+          {/* {navigation.state.params && (
+            <Text>
+              Last message sent:{" "}
+              {JSON.stringify(navigation.getParam("message", "No new message"))}
+            </Text>
+          )} */}
           {messagesArray &&
             messagesArray[0] !== "one element" &&
             messagesArray.map((data, i) => {
@@ -114,13 +120,14 @@ export default function History({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   historyView: {
+    position: "absolute",
     width: 350,
-    marginTop: 30,
+    top: 50,
   },
 
   flex: {

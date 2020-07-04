@@ -19,11 +19,10 @@ export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
   const [isProgressing, setProgressing] = useState(null);
   const [lastSent, setLastSent] = useState(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const chatRoomsRef = store.collection("chatRooms");
-  const oneHour = 60 * 60 * 1000;
 
   const showToast = () => {
     ToastAndroid.show(
@@ -56,10 +55,23 @@ export default function Home({ navigation }) {
     let randomUserID = "no other users";
     let randomUserTOKEN = "no other users";
     let indexe;
+    const pause = 6000;
+    const now = new Date().getTime();
+    if (message === "") return setError("empty");
+    else if (lastSent !== null && lastSent + pause < now) {
+      console.log("shall just send message again")
+    } else if (lastSent !== null) {
+      console.log("lastsent", lastSent)
+      console.log("nownowww", now)
+
 
     if (message === "") return setError("empty");
     else if (lastSent < oneHour) return setError("time");
     setProgressing(true);
+      setError("time");
+      return;
+    }
+
     await store
       .collection("users")
       .get()
@@ -89,6 +101,7 @@ export default function Home({ navigation }) {
       "nobody",
       false
     );
+    await setLastSent(new Date().getTime())
     await showToast();
     await sendNotification(randomUserTOKEN, message);
     await navigation.navigate("History", {
