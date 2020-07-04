@@ -3,21 +3,36 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 import * as firebase from "firebase";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .required("Email is required")
+    .email("Please enter valid email"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 character"),
+});
 
 export default class Login extends Component {
   state = {
-    email: "",
-    password: "",
     errorMessage: null,
+    isProgressing: null,
   };
 
-  handleLogin = () => {
-    const { email, password } = this.state;
-
+  handleLogin = (email, password) => {
+    this.setState({ isProgressing: true });
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .catch((error) => this.setState({ errorMessage: error.message }));
+      .then(() => {
+        this.setState({ inProgress: false });
+      })
+      .catch((error) => {
+        this.setState({ errorMessage: error.message });
+        this.setState({ inProgress: false });
+      });
   };
 
   render() {
@@ -30,48 +45,83 @@ export default class Login extends Component {
           )}
         </View>
 
-        <View style={styles.form}>
-          <View>
-            <Text style={styles.inputTitle}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={(email) =>
-                this.setState({ email: String(email).trim() })
-              }
-              value={this.state.email}
-            ></TextInput>
-          </View>
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          onSubmit={(values) => {
+            this.handleLogin(values.email, values.password);
+          }}
+          validationSchema={validationSchema}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+          }) => {
+            return (
+              <View style={styles.form}>
+                <View>
+                  <Text style={styles.inputTitle}>Email Address</Text>
+                  <TextInput
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={handleChange("email")}
+                    value={values.email}
+                  ></TextInput>
+                  <Text style={styles.errorText}>
+                    {touched.email && errors.email}
+                  </Text>
+                </View>
 
-          <View style={{ marginTop: 32 }}>
-            <Text style={styles.inputTitle}> Password </Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              autoCapitalize="none"
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
-            ></TextInput>
-          </View>
+                <View style={{ marginTop: 32 }}>
+                  <Text style={styles.inputTitle}> Password </Text>
+                  <TextInput
+                    style={styles.input}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    onChangeText={handleChange("password")}
+                    value={values.password}
+                  ></TextInput>
+                  <Text style={styles.errorText}>
+                    {touched.password && errors.password}
+                  </Text>
+                </View>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-            <Text style={{ color: "#FFF", fontWeight: "500" }}> Sign In </Text>
-          </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleSubmit}
+                  disabled={this.state.isProgressing}
+                >
+                  <Text style={{ color: "#FFF", fontWeight: "500" }}>
+                    {" "}
+                    Sign In{" "}
+                  </Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 32 }}
-            onPress={() => this.props.navigation.navigate("Register")}
-          >
-            <Text style={{ color: "#414959", fontSize: 13 }}>
-              {" "}
-              First-timer?
-              <Text style={{ fontWeight: "500", color: "#E9446A" }}>
-                {" "}
-                Sign Up
-              </Text>{" "}
-            </Text>
-          </TouchableOpacity>
-        </View>
+                <TouchableOpacity
+                  style={{ alignSelf: "center", marginTop: 32 }}
+                  onPress={() => this.props.navigation.navigate("Register")}
+                >
+                  <Text style={{ color: "#414959", fontSize: 13 }}>
+                    {" "}
+                    First-timer?
+                    <Text style={{ fontWeight: "500", color: "#E9446A" }}>
+                      {" "}
+                      Sign Up
+                    </Text>{" "}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </Formik>
       </KeyboardAvoidingScrollView>
     );
   }
@@ -123,5 +173,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 30,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
   },
 });

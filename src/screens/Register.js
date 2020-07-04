@@ -2,47 +2,58 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
-const short = require('short-uuid');
+const short = require("short-uuid");
 import * as firebase from "firebase";
+
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  name: Yup.string().required("Your username is require"),
+
+  email: Yup.string()
+    .required("Email is required")
+    .email("Please enter valid email"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 character"),
+});
 export default class Register extends Component {
   state = {
-    name: "",
-    email: "",
-    password: "",
     errorMessage: null,
+    isProgressing: null,
   };
 
-  handleRegister = async () => {
-    const credentials = await this.createUser()
-    await this.saveUser(credentials.user.uid)
-    this.updateProfile(credentials)
-  }
-
-  createUser = async () => {
-    return firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+  handleRegister = async ({ name, email, password }) => {
+    this.setState({ inProgress: true });
+    try {
+      const credentials = await this.createUser(email, password);
+      await this.saveUser(name, email, password, credentials.user.uid);
+      this.updateProfile(credentials, name);
+      this.setState({ inProgress: false });
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+    }
   };
 
-  saveUser = async(uid) => {
-         return firebase
-          .firestore()
-          .collection("users")
-          .doc(uid)
-          .set({
-            email: this.state.email,
-            password: this.state.password,
-            name: this.state.name,
-            uuid: uid,
-          });
-  }
+  createUser = async (email, password) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password);
+  };
 
-  updateProfile = (userCredentials) => {
-    return userCredentials.user.updateProfile({
-      displayName: this.state.name,
+  saveUser = async (name, email, password, uid) => {
+    return firebase.firestore().collection("users").doc(uid).set({
+      email,
+      password,
+      name,
+      uuid: uid,
     });
-  }
+  };
 
+  updateProfile = (userCredentials, displayName) => {
+    return userCredentials.user.updateProfile({
+      displayName,
+    });
+  };
 
   render() {
     return (
@@ -53,57 +64,97 @@ export default class Register extends Component {
             <Text style={styles.error}>{this.state.errorMessage}</Text>
           )}
         </View>
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+          }}
+          onSubmit={(values) => {
+            this.handleRegister(values);
+          }}
+          validationSchema={validationSchema}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+          }) => {
+            return (
+              <View style={styles.form}>
+                <View>
+                  <Text style={styles.inputTitle}>Real Name or Nickname</Text>
+                  <TextInput
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={handleChange("name")}
+                    value={values.name}
+                  ></TextInput>
+                  <Text style={styles.errorText}>
+                    {touched.name && errors.name}
+                  </Text>
+                </View>
+                <View style={{ marginTop: 32 }}>
+                  <Text style={styles.inputTitle}>Email Address</Text>
+                  <TextInput
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={handleChange("email")}
+                    value={values.email}
+                  ></TextInput>
+                  <Text style={styles.errorText}>
+                    {touched.email && errors.email}
+                  </Text>
+                </View>
 
-        <View style={styles.form}>
-          <View>
-            <Text style={styles.inputTitle}>Real Name or Nickname</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={(name) => this.setState({ name })}
-              value={this.state.name}
-            ></TextInput>
-          </View>
-          <View style={{ marginTop: 32 }}>
-            <Text style={styles.inputTitle}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={(email) => this.setState({ email })}
-              value={this.state.email}
-            ></TextInput>
-          </View>
+                <View style={{ marginTop: 32 }}>
+                  <Text style={styles.inputTitle}> Password </Text>
+                  <TextInput
+                    style={styles.input}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    onChangeText={handleChange("password")}
+                    value={values.password}
+                  ></TextInput>
+                  <Text style={styles.errorText}>
+                    {touched.password && errors.password}
+                  </Text>
+                </View>
 
-          <View style={{ marginTop: 32 }}>
-            <Text style={styles.inputTitle}> Password </Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              autoCapitalize="none"
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
-            ></TextInput>
-          </View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleSubmit}
+                  disabled={this.state.isProgressing}
+                >
+                  <Text style={{ color: "#FFF", fontWeight: "500" }}>
+                    {" "}
+                    Sign Up{" "}
+                  </Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
-            <Text style={{ color: "#FFF", fontWeight: "500" }}> Sign Up </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 32 }}
-            onPress={() => this.props.navigation.navigate("Login")}
-          >
-            <Text style={{ color: "#414959", fontSize: 13 }}>
-              {" "}
-              Have an account? Then
-              <Text style={{ fontWeight: "500", color: "#E9446A" }}>
-                {" "}
-                log in
-              </Text>{" "}
-              pumpkin{" "}
-            </Text>
-          </TouchableOpacity>
-        </View>
+                <TouchableOpacity
+                  style={{ alignSelf: "center", marginTop: 32 }}
+                  onPress={() => this.props.navigation.navigate("Login")}
+                >
+                  <Text style={{ color: "#414959", fontSize: 13 }}>
+                    {" "}
+                    Have an account? Then
+                    <Text style={{ fontWeight: "500", color: "#E9446A" }}>
+                      {" "}
+                      log in
+                    </Text>{" "}
+                    pumpkin{" "}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </Formik>
       </KeyboardAvoidingScrollView>
     );
   }
@@ -155,5 +206,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 30,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
   },
 });

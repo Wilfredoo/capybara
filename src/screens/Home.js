@@ -17,15 +17,12 @@ import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scrol
 
 export default function Home({ navigation }) {
   const [message, setMessage] = useState("");
+  const [isProgressing, setProgressing] = useState(null);
   const [lastSent, setLastSent] = useState(null);
   const [error, setError] = useState(null);
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const chatRoomsRef = store.collection("chatRooms");
-
-  useEffect(() => {
-    registerToken(currentUser);
-  }, []);
 
   const showToast = () => {
     ToastAndroid.show(
@@ -33,6 +30,15 @@ export default function Home({ navigation }) {
       ToastAndroid.SHORT
     );
   };
+
+  useEffect(() => {
+    getSentMessages().then((result) => {
+      result.forEach((docSnapshot) => {
+        setLastSent(docSnapshot.data().time);
+      });
+    });
+    registerToken(currentUser);
+  }, []);
 
   getSentMessages = async () => {
     const sentSnapshot = await chatRoomsRef
@@ -58,7 +64,10 @@ export default function Home({ navigation }) {
       console.log("lastsent", lastSent)
       console.log("nownowww", now)
 
-      console.log('oh no, shall not send message, too quick!')
+
+    if (message === "") return setError("empty");
+    else if (lastSent < oneHour) return setError("time");
+    setProgressing(true);
       setError("time");
       return;
     }
@@ -77,9 +86,11 @@ export default function Home({ navigation }) {
         randomUser = users[Math.floor(Math.random() * users.length)];
         randomUserID = randomUser.id;
         randomUserTOKEN = randomUser.data().pushToken;
+        setProgressing(false);
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
+        setProgressing(false);
       });
 
     await createMessage(
@@ -129,7 +140,14 @@ export default function Home({ navigation }) {
             You sent a message just now. Maybe wait a bit.
           </Text>
         )}
-        <TouchableOpacity style={styles.button} onPress={() => sendMessage()}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: isProgressing ? "#ccc" : "#E9446A" },
+          ]}
+          onPress={() => sendMessage()}
+          disabled={isProgressing}
+        >
           <Text style={styles.buttonText}> Send </Text>
         </TouchableOpacity>
       </KeyboardAvoidingScrollView>
