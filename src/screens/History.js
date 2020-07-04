@@ -70,7 +70,7 @@ export default function History({ navigation }) {
 
   return (
     <>
-      <Header navigation={navigation} where={"History"} />
+      <Header navigation={navigation} />
       <View style={styles.container}>
         <View>
           {messagesArray.length === 0 && (

@@ -55,15 +55,12 @@ export default function Home({ navigation }) {
     let randomUserID = "no other users";
     let randomUserTOKEN = "no other users";
     let indexe;
-    const pause = 6000;
+    const pause = 60000;
     const now = new Date().getTime();
     if (message === "") return setError("empty");
     else if (lastSent !== null && lastSent + pause < now) {
       console.log("shall just send message again")
     } else if (lastSent !== null) {
-      console.log("lastsent", lastSent)
-      console.log("nownowww", now)
-
 
     if (message === "") return setError("empty");
     else if (lastSent < oneHour) return setError("time");
