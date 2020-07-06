@@ -81,12 +81,6 @@ export default function History({ navigation }) {
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
         <ScrollView style={styles.historyView}>
-          {/* {navigation.state.params && (
-            <Text>
-              Last message sent:{" "}
-              {JSON.stringify(navigation.getParam("message", "No new message"))}
-            </Text>
-          )} */}
           {messagesArray &&
             messagesArray[0] !== "one element" &&
             messagesArray.map((data, i) => {

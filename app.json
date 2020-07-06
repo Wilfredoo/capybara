@@ -9,7 +9,7 @@
     ],
     "android": {
       "package": "com.octopusprojects.mibapp",
-      "versionCode": 2
+      "versionCode": 3
     },
     "version": "1.0.0",
     "orientation": "portrait",

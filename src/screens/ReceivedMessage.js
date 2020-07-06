@@ -10,10 +10,13 @@ import moment from "moment";
 import * as firebase from "firebase";
 
 export default function ReceivedMessage({ data, reply, navigation }) {
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
   const store = firebase.firestore();
+  const [error, setError] = useState(null);
 
-  replyAndClear = async(senderId, inReplyTo, message) => {
+  const replyAndClear = async(senderId, inReplyTo, message) => {
+    if (message === "") return setError("empty");
+
     await reply(senderId, inReplyTo, message)
     navigation.navigate("History", {
       message
@@ -21,8 +24,12 @@ export default function ReceivedMessage({ data, reply, navigation }) {
     clearInput()
   }
 
-  clearInput = () => {
+  const clearInput = () => {
     setMessage("should be null")
+  }
+
+  const forget = () => {
+    console.log("forget it fellow")
   }
 
   return (
@@ -67,13 +74,18 @@ export default function ReceivedMessage({ data, reply, navigation }) {
                 onChangeText={(text) => setMessage(text)}
                 style={styles.input}
               />
+              {error === "empty" && (
+          <Text style={styles.error}>
+            Sending an empty message? What kind of person are you?
+          </Text>
+        )}
               <TouchableOpacity
                 style={styles.replyButton}
                 onPress={() => replyAndClear(data.data.from, data.data.id, message)}
               >
                 <Text style={{ color: "#FFF", fontWeight: "500" }}>Reply</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={styles.forgetButton}
                 onPress={() => forget()}
               >
@@ -87,7 +99,7 @@ export default function ReceivedMessage({ data, reply, navigation }) {
                 >
                   Report
                 </Text>
-              </TouchableOpacity> */}
+              </TouchableOpacity>
             </>
           )}
         </>
@@ -135,6 +147,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     marginTop: 40,
+    marginBottom: 30,
+
   },
   previousMessage: {
     marginBottom: 30,
@@ -147,4 +161,6 @@ const styles = StyleSheet.create({
   highlight: {
     fontSize: 20,
   },
+  error: { width: 350, textAlign: "center", color: "red" },
+
 });

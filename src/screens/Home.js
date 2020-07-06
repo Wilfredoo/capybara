@@ -55,7 +55,9 @@ export default function Home({ navigation }) {
     let randomUserID = "no other users";
     let randomUserTOKEN = "no other users";
     let indexe;
-    const pause = 60000;
+    // const pause = 60000;
+    const pause = 60;
+
     const now = new Date().getTime();
     if (message === "") return setError("empty");
     else if (lastSent !== null && lastSent + pause < now) {
@@ -63,7 +65,7 @@ export default function Home({ navigation }) {
     } else if (lastSent !== null) {
 
     if (message === "") return setError("empty");
-    else if (lastSent < oneHour) return setError("time");
+    else if (lastSent !==null) return setError("time");
     setProgressing(true);
       setError("time");
       return;
