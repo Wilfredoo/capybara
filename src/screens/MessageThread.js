@@ -11,17 +11,25 @@ import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scrol
 const store = firebase.firestore();
 const messageRef = store.collection("chatRooms");
 
-const showToast = () => {
+const showToast = (type) => {
+  let toastMessage = null
+  const replyToast = "Message reply sent."
+  const forgetToast = "Message has been forgotten. Forever."
+  const reportToast = "Message has been reported. Big time."
+  if( type === "reply") toastMessage = replyToast
+  if( type === "forget") toastMessage = forgetToast
+  if( type === "report") toastMessage = reportToast
+
   ToastAndroid.show(
-    "Message reply sent, let's just hope they'll reply...",
+   toastMessage,
     ToastAndroid.SHORT
   );
 };
+
 let currentUser = null;
 export default class MessageThread extends Component {
   constructor() {
     super();
-
     this.state = {
       data: null,
       type: null,
@@ -36,16 +44,19 @@ export default class MessageThread extends Component {
   reply(senderId, inReplyTo, message) {
     messageRef.doc(inReplyTo).update({ hasReply: true });
     createMessage(message, senderId, currentUser, true, inReplyTo, false);
-    showToast()
+    showToast("reply")
   }
 
-  forget(id) {
-    console.log("forget it", id);
+  forget = (id) => {
     messageRef.doc(id).update({ forgotten: true });
+    this.props.navigation.navigate("History")
+    showToast("forget")
   }
 
-  report(senderId, inReplyTo, message) {
-    console.log("report");
+  report = (id) => {
+    messageRef.doc(id).update({ reported: true });
+    this.props.navigation.navigate("History")
+    showToast("report")
   }
 
   getSender(personImReplying) {
@@ -96,6 +107,7 @@ export default class MessageThread extends Component {
             data={this.state}
             reply={this.reply}
             forget={this.forget}
+            report={this.report}
             navigation={this.props.navigation}
           />
       </KeyboardAvoidingScrollView>

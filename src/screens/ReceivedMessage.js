@@ -9,14 +9,16 @@ import {
 import moment from "moment";
 import * as firebase from "firebase";
 
-export default function ReceivedMessage({ data, reply, navigation }) {
+const store = firebase.firestore();
+const messageRef = store.collection("chatRooms");
+
+export default function ReceivedMessage({ data, reply, forget, report, navigation }) {
   const [message, setMessage] = useState("");
   const store = firebase.firestore();
   const [error, setError] = useState(null);
 
   const replyAndClear = async(senderId, inReplyTo, message) => {
     if (message === "") return setError("empty");
-
     await reply(senderId, inReplyTo, message)
     navigation.navigate("History", {
       message
@@ -25,12 +27,10 @@ export default function ReceivedMessage({ data, reply, navigation }) {
   }
 
   const clearInput = () => {
-    setMessage("should be null")
+    setMessage(null)
   }
 
-  const forget = () => {
-    console.log("forget it fellow")
-  }
+
 
   return (
     <View style={styles.buttonsContainer}>
@@ -87,13 +87,13 @@ export default function ReceivedMessage({ data, reply, navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.forgetButton}
-                onPress={() => forget()}
+                onPress={() => forget(data.data.id)}
               >
                 <Text style={{ color: "#204051", fontWeight: "500" }}>
                   Forget
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => report()}>
+              <TouchableOpacity onPress={() => report(data.data.id)}>
                 <Text
                   style={{ color: "#204051", fontWeight: "500", marginTop: 30 }}
                 >

@@ -26,7 +26,7 @@ export default function Home({ navigation }) {
 
   const showToast = () => {
     ToastAndroid.show(
-      "Message reply sent, Someone will reply...",
+      "Message sent, maybe someone will reply, maybe not ¯\_(ツ)_/¯",
       ToastAndroid.SHORT
     );
   };

@@ -26,6 +26,8 @@ const createMessage = (message, to, from, isReply, inReplyTo, hasReply) => {
     isReply,
     inReplyTo,
     hasReply,
+    forgotten: false,
+    reported: false
   });
 };
 

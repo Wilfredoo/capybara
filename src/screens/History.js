@@ -44,6 +44,8 @@ export default function History({ navigation }) {
       .orderBy("time", "desc")
       .where("to", "==", currentUser)
       .where("hasReply", "==", false)
+      .where("forgotten", "==", false)
+      .where("reported", "==", false)
       .get();
 
     const sentArray = sentSnapshot.docs;
