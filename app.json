@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MIB App",
-    "slug": "message-in-a-bottle-app",
+    "name": "Capybara",
+    "slug": "capybara",
     "platforms": [
       "ios",
       "android",
@@ -9,7 +9,13 @@
     ],
     "android": {
       "package": "com.octopusprojects.mibapp",
-      "versionCode": 3
+      "versionCode": 5,
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyC6GeD4QMDqeYFBuJymOSg2peYdqFluw94"
+        }
+     }
     },
     "version": "1.0.0",
     "orientation": "portrait",

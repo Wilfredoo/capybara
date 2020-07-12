@@ -9,7 +9,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Your username is require"),
+  name: Yup.string().required("Your username is required"),
 
   email: Yup.string()
     .required("Email is required")

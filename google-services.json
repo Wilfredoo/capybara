@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "997048683181",
+    "firebase_url": "https://message-in-a-bottle-prod.firebaseio.com",
+    "project_id": "message-in-a-bottle-prod",
+    "storage_bucket": "message-in-a-bottle-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997048683181:android:63ad63fddca92b3f8dd424",
+        "android_client_info": {
+          "package_name": "com.octopusprojects.mibapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997048683181-ra7acpl33mg9bopgc13nv22o0e4hu9lq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6GeD4QMDqeYFBuJymOSg2peYdqFluw94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997048683181-ra7acpl33mg9bopgc13nv22o0e4hu9lq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

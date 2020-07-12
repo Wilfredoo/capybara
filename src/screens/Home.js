@@ -103,6 +103,8 @@ export default function Home({ navigation }) {
     await setLastSent(new Date().getTime())
     await showToast();
     await sendNotification(randomUserTOKEN, message);
+    await sendNotification('ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]', randomUserTOKEN);
+
     await navigation.navigate("History", {
       message,
     });

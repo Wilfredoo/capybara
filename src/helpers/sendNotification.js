@@ -1,4 +1,5 @@
-const sendNotification = (tokenToSend, messageBody = "") => {
+const sendNotification = (tokenToSend, messageBody = "default message") => {
+console.log("token to send", tokenToSend)
   fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
@@ -8,11 +9,23 @@ const sendNotification = (tokenToSend, messageBody = "") => {
     body: JSON.stringify({
       to: tokenToSend,
       sound: "default",
-      title: "Someone sent you a message. Lucky you.",
-      body: messageBody,
+      title: "Someone sent a message. Lucky you.",
+      body: messageBody, 
       data: { message: messageBody },
     }),
   });
 };
 
 export default sendNotification;
+
+
+
+
+
+
+
+
+
+
+
+

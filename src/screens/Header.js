@@ -5,16 +5,12 @@ export default function Header({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("App")}>
-        <View style={styles.flex}>
+        <View>
           <Image
-            style={{ width: 40, height: 40 }}
-            source={require("../../assets/bottle.png")}
+            style={{ width: 140, height: 140, width: 200 }}
+            source={require("../../assets/header.png")}
           />
-          <Text style={{ marginBottom: 12 }}>Message in a bottle</Text>
-          <Image
-            style={{ width: 40, height: 40 }}
-            source={require("../../assets/bottle.png")}
-          />
+          
         </View>
       </TouchableOpacity>
     </View>
@@ -23,11 +19,8 @@ export default function Header({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    marginTop: 30,
     alignItems: "center",
   },
-  flex: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-  },
+
 });
