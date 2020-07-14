@@ -82,7 +82,7 @@ export default function History({ navigation }) {
         {messagesArray.length === 1 && messagesArray[0] === "one element" && (
           <ActivityIndicator size="large"></ActivityIndicator>
         )}
-        <ScrollView style={styles.historyView}>
+        <ScrollView style={styles.historyView} showsHorizontalScrollIndicator={false}>
           {messagesArray &&
             messagesArray[0] !== "one element" &&
             messagesArray.map((data, i) => {
@@ -100,12 +100,12 @@ export default function History({ navigation }) {
                       {data.from !== currentUser && !data.isReply && <Text style={styles.tag}>Say something back!</Text>}
 
                       {data.from === currentUser ? (
-                        <Feather name="arrow-up-right" size={30} color="pink" />
+                        <Feather name="arrow-up-right" size={30} color="#E9446A" />
                       ) : (
                         <Feather
                           name="arrow-down-left"
                           size={30}
-                          color="pink"
+                          color="#E9446A"
                         />
                       )}
                     </View>
@@ -133,7 +133,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderBottomWidth: 0.5,
     borderBottomColor: "#7d90a0",
-  },
+  }
+  ,
   tag:
-  {fontSize: 10, backgroundColor: "yellow", paddingLeft: 10, paddingRight: 10, paddingBottom: 5, paddingTop: 5, marginBottom: 10}
+  {fontSize: 10, backgroundColor: "#7d5a5a", color:"#fff", paddingLeft: 10, paddingRight: 10, paddingBottom: 5, paddingTop: 5, marginBottom: 10}
 });

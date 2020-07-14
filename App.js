@@ -15,7 +15,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { decode, encode } from "base-64";
 import { YellowBox } from "react-native";
 import _ from "lodash";
-import { FontAwesome5, Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons ,Entypo, MaterialCommunityIcons} from "@expo/vector-icons";
 
 if (!firebase.apps.length) {
   if (__DEV__) {
@@ -54,7 +54,7 @@ const DashboardTabNavigator = createBottomTabNavigator(
         title: "Profile",
         tabBarLabel: "Profile",
         tabBarIcon: ({ tintColor }) => (
-          <AntDesign name="meho" size={20} color={tintColor} />
+          <MaterialCommunityIcons name="baby-face" size={20} color={tintColor} />
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
@@ -68,7 +68,7 @@ const DashboardTabNavigator = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Main",
         tabBarIcon: ({ tintColor }) => (
-          <FontAwesome5 name="wine-bottle" size={20} color={tintColor} />
+          <Entypo name="message" size={20} color={tintColor} />
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
