@@ -1,5 +1,4 @@
 const sendNotification = (tokenToSend, messageBody = "default message") => {
-console.log("token to send", tokenToSend)
   fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
@@ -9,9 +8,10 @@ console.log("token to send", tokenToSend)
     body: JSON.stringify({
       to: tokenToSend,
       sound: "default",
-      title: "Someone sent a message. Lucky you.",
+      title: "Someone sent you a message. Lucky you.",
       body: messageBody, 
       data: { message: messageBody },
+      channelId: "capynotifications"
     }),
   });
 };

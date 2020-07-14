@@ -12,6 +12,17 @@ const registerToken = async (currentUser) => {
   }
   const token = await Notifications.getExpoPushTokenAsync();
   usersRef.doc(currentUser).update({ pushToken: token });
+
+  if (Platform.OS === 'android') {
+    Notifications.createChannelAndroidAsync('capynotifications', {
+      name: 'capynotifications',
+      sound: true,
+      priority: 'high',
+      vibrate: [0, 250, 250, 250],
+    }).then(() => {
+      console.log('it works');
+    });
+  }
 };
 
 export default registerToken;

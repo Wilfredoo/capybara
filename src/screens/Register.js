@@ -28,7 +28,7 @@ export default class Register extends Component {
     this.setState({ inProgress: true });
     try {
       const credentials = await this.createUser(email, password);
-      await this.saveUser(name, email, password, credentials.user.uid);
+      await this.saveUser(name, email, credentials.user.uid);
       this.updateProfile(credentials, name);
       this.setState({ inProgress: false });
     } catch (error) {
@@ -40,10 +40,9 @@ export default class Register extends Component {
     return firebase.auth().createUserWithEmailAndPassword(email, password);
   };
 
-  saveUser = async (name, email, password, uid) => {
+  saveUser = async (name, email, uid) => {
     return firebase.firestore().collection("users").doc(uid).set({
       email,
-      password,
       name,
       uuid: uid,
     });

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Capybara",
-    "slug": "capybara",
+    "slug": "message-in-a-bottle-app",
     "platforms": [
       "ios",
       "android",

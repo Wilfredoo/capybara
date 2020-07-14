@@ -33,14 +33,14 @@ export default function History({ navigation }) {
 
   async function getAllMessages() {
     const sentSnapshot = await chatRoomsRef
-      .limit(10)
+      .limit(20)
       .orderBy("time", "desc")
       .where("from", "==", currentUser)
       .where("hasReply", "==", false)
       .get();
 
     const receivedSnapshot = await chatRoomsRef
-      .limit(10)
+      .limit(20)
       .orderBy("time", "desc")
       .where("to", "==", currentUser)
       .where("hasReply", "==", false)
@@ -89,11 +89,16 @@ export default function History({ navigation }) {
               return (
                 <TouchableOpacity key={i} onPress={() => seeMessage(data.id)}>
                   <View style={styles.historyUnit}>
-                    <Text style={{ width: 350 }}>{data.message}</Text>
+                    <Text style={{ width: 350, marginBottom:-2 }}>{data.message}</Text>
                     <View style={styles.flex}>
                       <Text style={{ color: "gray" }}>
                         {moment(data.time).fromNow()}
                       </Text>
+                      {data.from !== currentUser && data.isReply && <Text style={styles.tag}>Someone replied!</Text>}
+                      {data.from === currentUser && data.isReply && <Text style={styles.tag}>Well said!</Text>}
+                      {data.from === currentUser && !data.isReply && <Text style={styles.tag}>Waiting for a reply...</Text>}
+                      {data.from !== currentUser && !data.isReply && <Text style={styles.tag}>Say something back!</Text>}
+
                       {data.from === currentUser ? (
                         <Feather name="arrow-up-right" size={30} color="pink" />
                       ) : (
@@ -116,20 +121,12 @@ export default function History({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    justifyContent: "center",
     alignItems: "center",
   },
-  historyView: {
-    position: "absolute",
-    width: 350,
-    top: 50,
-  },
-
   flex: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
+    alignItems: "center"
   },
   historyUnit: {
     marginTop: 15,
@@ -137,4 +134,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#7d90a0",
   },
+  tag:
+  {fontSize: 10, backgroundColor: "yellow", paddingLeft: 10, paddingRight: 10, paddingBottom: 5, paddingTop: 5, marginBottom: 10}
 });
