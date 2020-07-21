@@ -26,7 +26,7 @@ export default function Home({ navigation }) {
 
   const showToast = () => {
     ToastAndroid.show(
-      "Message sent, maybe someone will reply, maybe not ¯\_(ツ)_/¯",
+      "Message sent, maybe someone will reply, maybe not ¯_(ツ)_/¯",
       ToastAndroid.SHORT
     );
   };
@@ -57,16 +57,14 @@ export default function Home({ navigation }) {
     let indexe;
     // const pause = 60000;
     const pause = 60;
-
     const now = new Date().getTime();
     if (message === "") return setError("empty");
     else if (lastSent !== null && lastSent + pause < now) {
-      console.log("shall just send message again")
+      console.log("shall just send message again");
     } else if (lastSent !== null) {
-
-    if (message === "") return setError("empty");
-    else if (lastSent !==null) return setError("time");
-    setProgressing(true);
+      if (message === "") return setError("empty");
+      else if (lastSent !== null) return setError("time");
+      setProgressing(true);
       setError("time");
       return;
     }
@@ -76,15 +74,17 @@ export default function Home({ navigation }) {
       .get()
       .then((querySnapshot) => {
         users = querySnapshot.docs;
-        users.map((data, index) => {
-          if (data.id === currentUser) {
-            indexe = index;
+        const activeUsersWithoutMe = [];
+        users.forEach((data) => {
+          if (data.data().uuid !== currentUser) {
+            if (data.data().inactive !== true) {
+              activeUsersWithoutMe.push(data.data());
+            }
           }
         });
-        if (indexe !== -1) users.splice(indexe, 1);
-        randomUser = users[Math.floor(Math.random() * users.length)];
-        randomUserID = randomUser.id;
-        randomUserTOKEN = randomUser.data().pushToken;
+        randomUser = activeUsersWithoutMe[Math.floor(Math.random() * activeUsersWithoutMe.length)];
+        randomUserID = randomUser.uuid;
+        randomUserTOKEN = randomUser.pushToken;
         setProgressing(false);
       })
       .catch(function (error) {
@@ -100,10 +100,13 @@ export default function Home({ navigation }) {
       "nobody",
       false
     );
-    await setLastSent(new Date().getTime())
+    await setLastSent(new Date().getTime());
     await showToast();
     await sendNotification(randomUserTOKEN, message);
-    await sendNotification('ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]', randomUserTOKEN);
+    await sendNotification(
+      "ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]",
+      message
+    );
 
     await navigation.navigate("History", {
       message,

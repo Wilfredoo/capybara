@@ -10,7 +10,6 @@ export default function Header({ navigation }) {
             style={{ width: 140, height: 140, width: 200 }}
             source={require("../../assets/header.png")}
           />
-          
         </View>
       </TouchableOpacity>
     </View>

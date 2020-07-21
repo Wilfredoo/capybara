@@ -9,7 +9,7 @@
     ],
     "android": {
       "package": "com.octopusprojects.mibapp",
-      "versionCode": 5,
+      "versionCode": 7,
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleSignIn": {

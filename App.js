@@ -13,9 +13,10 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { decode, encode } from "base-64";
-import { YellowBox } from "react-native";
+import { YellowBox, Text } from "react-native";
 import _ from "lodash";
-import { Ionicons ,Entypo, MaterialCommunityIcons} from "@expo/vector-icons";
+import { Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import IconBadge from "react-native-icon-badge";
 
 if (!firebase.apps.length) {
   if (__DEV__) {
@@ -51,10 +52,15 @@ const DashboardTabNavigator = createBottomTabNavigator(
     Profile: {
       screen: Profile,
       navigationOptions: {
+        header: null,
         title: "Profile",
         tabBarLabel: "Profile",
         tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons name="baby-face" size={20} color={tintColor} />
+          <MaterialCommunityIcons
+            name="baby-face"
+            size={30}
+            color={tintColor}
+          />
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
@@ -62,13 +68,13 @@ const DashboardTabNavigator = createBottomTabNavigator(
         },
       },
     },
-
     Main: {
       screen: Home,
       navigationOptions: {
+        header: null,
         tabBarLabel: "Main",
         tabBarIcon: ({ tintColor }) => (
-          <Entypo name="message" size={20} color={tintColor} />
+          <Entypo name="message" size={30} color={tintColor} />
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
@@ -80,28 +86,33 @@ const DashboardTabNavigator = createBottomTabNavigator(
       screen: History,
       headerTitle: "History",
       navigationOptions: {
+        header: null,
         tabBarLabel: "History",
         tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="md-paper" size={20} color={tintColor} />
+          <IconBadge
+            MainElement={
+              <Ionicons name="md-paper" size={30} color={tintColor} />
+            }
+            IconBadgeStyle={{
+              left: 10,
+              width: 10,
+              height: 20,
+              backgroundColor: "#E9446A",
+            }}
+            Hidden={true}
+          />
         ),
         tabBarOptions: {
           activeTintColor: "#E9446A",
-          inactiveTintColor: "gray",
+          inactiveTintColor: "gray"
         },
       },
     },
   },
   {
-    initialRouteName: "Main",
-    navigationOptions: ({ navigation }) => {
-      const { routeName } = navigation.state.routes[navigation.state.index];
-      return {
-        headerTitle: routeName,
-      };
-    },
-  },
-  {}
-);
+    initialRouteName: "Main"
+  }
+)
 
 export default createAppContainer(
   createSwitchNavigator(
