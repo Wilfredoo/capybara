@@ -90,13 +90,14 @@ export default function History({ navigation }) {
               return (
                 <TouchableOpacity key={i} onPress={() => seeMessage(data.id)}>
                   <View style={styles.historyUnit}>
-                    <Text style={{ width: 350, marginBottom: -2 }}>
+                    <Text numberOfLines={1} style={styles.message}>
                       {data.message}
                     </Text>
                     <View style={styles.flex}>
                       <Text style={{ color: "gray" }}>
                         {moment(data.time).fromNow()}
                       </Text>
+                      <View style={styles.flex}>
                       {data.from !== currentUser && data.isReply && (
                         <Text style={styles.tag}>Someone replied!</Text>
                       )}
@@ -125,6 +126,7 @@ export default function History({ navigation }) {
                           color="#E9446A"
                         />
                       )}
+                      </View>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -143,8 +145,10 @@ const styles = StyleSheet.create({
   flex: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    // alignItems: "center",
+    alignItems: 'baseline'
   },
+  message: { width: 350, marginBottom: -2 },
   historyUnit: {
     marginTop: 15,
     marginBottom: 15,
@@ -153,13 +157,14 @@ const styles = StyleSheet.create({
   },
   tag: {
     fontSize: 10,
-    backgroundColor: "#7d5a5a",
-    color: "#fff",
+    backgroundColor: "#e3dfc8",
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 5,
     paddingTop: 5,
-    marginBottom: 10,
+    marginBottom: 6,
+    textAlign: "left",
+    marginRight: 12
   },
   specialTag: {
     fontSize: 10,
@@ -169,6 +174,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 5,
     paddingTop: 5,
-    marginBottom: 10,
+    marginBottom: 6,
+    marginRight: 12
   },
 });
