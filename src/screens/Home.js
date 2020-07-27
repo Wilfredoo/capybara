@@ -23,6 +23,7 @@ export default function Home({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const chatRoomsRef = store.collection("chatRooms");
+  const usersRef = store.collection("users");
 
   const showToast = () => {
     ToastAndroid.show(
@@ -32,13 +33,59 @@ export default function Home({ navigation }) {
   };
 
   useEffect(() => {
-    getSentMessages().then((result) => {
-      result.forEach((docSnapshot) => {
-        setLastSent(docSnapshot.data().time);
+    // getSentMessages().then((result) => {
+    //   result.forEach((docSnapshot) => {
+    //     setLastSent(docSnapshot.data().time);
+    //   });
+    // });
+    getAllMessages()
+      .then((result) => {
+        return getInactiveUsers(result);
+      })
+      .then((result) => {
+        return pauseInactiveUsers(result);
       });
-    });
     registerToken(currentUser);
   }, []);
+
+  const getAllMessages = async () => {
+    const lastWeek = new Date().getTime() - 24 * 7 * 60 * 60 * 1000;
+    const snapshot = await chatRoomsRef
+      .limit(20)
+      .where("isReply", "==", false)
+      .where("hasReply", "==", false)
+      .where("time", ">", lastWeek)
+      .get();
+    const snapshotArray = snapshot.docs;
+    return snapshotArray;
+  };
+
+  const getInactiveUsers = async (result) => {
+    let usersWhoHaveNotReplied = [];
+    let counts = {};
+    const inactiveUsersArray = [];
+    result.forEach((docSnapshot) => {
+      usersWhoHaveNotReplied.push(docSnapshot.data().to);
+    });
+    usersWhoHaveNotReplied.forEach(function (x) {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+    for (const [key, value] of Object.entries(counts)) {
+      if (key !== "no other users" && value >= 3) inactiveUsersArray.push(key);
+    }
+    return inactiveUsersArray;
+  };
+
+  const pauseInactiveUsers = async (result) => {
+    result.forEach((data) => {
+      usersRef.doc(data).set(
+        {
+          inactive: true,
+        },
+        { merge: true }
+      );
+    });
+  };
 
   getSentMessages = async () => {
     const sentSnapshot = await chatRoomsRef
@@ -54,7 +101,6 @@ export default function Home({ navigation }) {
     let randomUser;
     let randomUserID = "no other users";
     let randomUserTOKEN = "no other users";
-    let indexe;
     // const pause = 60000;
     const pause = 60;
     const now = new Date().getTime();
@@ -82,7 +128,11 @@ export default function Home({ navigation }) {
             }
           }
         });
-        randomUser = activeUsersWithoutMe[Math.floor(Math.random() * activeUsersWithoutMe.length)];
+
+        randomUser =
+          activeUsersWithoutMe[
+            Math.floor(Math.random() * activeUsersWithoutMe.length)
+          ];
         randomUserID = randomUser.uuid;
         randomUserTOKEN = randomUser.pushToken;
         setProgressing(false);
@@ -107,7 +157,6 @@ export default function Home({ navigation }) {
       "ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]",
       message
     );
-
     await navigation.navigate("History", {
       message,
     });

@@ -20,7 +20,6 @@ const registerToken = async (currentUser) => {
       priority: 'high',
       vibrate: [0, 250, 250, 250],
     }).then(() => {
-      console.log('it works');
     });
   }
 };
