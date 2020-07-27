@@ -51,12 +51,11 @@ export default function Home({ navigation }) {
   const getAllMessages = async () => {
     const lastWeek = new Date().getTime() - 24 * 7 * 60 * 60 * 1000;
     const snapshot = await chatRoomsRef
-      .limit(20)
+    .where("time", ">", lastWeek)
       .where("isReply", "==", false)
       .where("hasReply", "==", false)
       .where("forgotten", "==", false)
       .where("reported", "==", false)
-      .where("time", ">", lastWeek)
       .get();
     const snapshotArray = snapshot.docs;
     return snapshotArray;
@@ -67,6 +66,7 @@ export default function Home({ navigation }) {
     let counts = {};
     const inactiveUsersArray = [];
     result.forEach((docSnapshot) => {
+  
       usersWhoHaveNotReplied.push(docSnapshot.data().to);
     });
     usersWhoHaveNotReplied.forEach(function (x) {
@@ -82,7 +82,6 @@ export default function Home({ navigation }) {
 
     const inactiveUsersToPause = [];
     allUsersWhoHaveNotReplied.docs.forEach((user) => {
-      console.log("data", user.data().inactive);
       if (!user.data().inactive || user.data().inactive === "undefined") {
         inactiveUsersToPause.push(user.data());
       }
@@ -91,7 +90,7 @@ export default function Home({ navigation }) {
   };
 
   const pauseInactiveUsers = async (result) => {
-    console.log("new inactive users to pause", result);
+    console.log("pause inactive", result)
     result.forEach((data) => {
       sendNotification(data.pushToken, "Your account has been paused because you are not replying to messages.");
        sendNotification(

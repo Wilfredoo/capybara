@@ -11,12 +11,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { Feather } from "@expo/vector-icons";
 import Header from "./Header";
+import sendNotification from "../helpers/sendNotification.js";
+
 
 export default function History({ navigation }) {
   const currentUser = firebase.auth().currentUser.uid;
   const store = firebase.firestore();
   const [messagesArray, setMessagesArray] = useState(["one element"]);
   const chatRoomsRef = store.collection("chatRooms");
+  const usersRef = store.collection("users");
 
   useEffect(() => {
     getAllMessages().then((result) => {
@@ -30,24 +33,33 @@ export default function History({ navigation }) {
   }, [navigation]);
 
   async function getAllMessages() {
+    const unrepliedReceivedMessages = []
+    const lastWeek = new Date().getTime() - 24 * 7 * 60 * 60 * 1000;
     const sentSnapshot = await chatRoomsRef
-      .limit(20)
+      .limit(10)
       .orderBy("time", "desc")
       .where("from", "==", currentUser)
       .where("hasReply", "==", false)
+      .where("time", ">", lastWeek)
       .get();
 
     const receivedSnapshot = await chatRoomsRef
-      .limit(20)
       .orderBy("time", "desc")
       .where("to", "==", currentUser)
       .where("hasReply", "==", false)
       .where("forgotten", "==", false)
       .where("reported", "==", false)
+      .where("time", ">", lastWeek)
       .get();
 
     const sentArray = sentSnapshot.docs;
     const receivedArray = receivedSnapshot.docs;
+    receivedArray.forEach(received => {
+      console.log("received", received.data())
+      if (!received.data().hasReply && !received.data().isReply) unrepliedReceivedMessages.push(received.data())
+    })
+
+    if (unrepliedReceivedMessages.length < 3) resumeActivity()
     const messagesArray = sentArray.concat(receivedArray);
     return messagesArray;
   }
@@ -67,6 +79,26 @@ export default function History({ navigation }) {
     }
     return 0;
   }
+
+  const resumeActivity = async () => {
+    console.log("hells angels")
+    const myUserInfo = await usersRef.doc(currentUser).get()
+    const myPushToken = await myUserInfo.data().pushToken
+    console.log("myss", myUserInfo.data().inactive)
+    if (myUserInfo.data().inactive) {
+      console.log("shhai labeauf")
+      sendNotification(myPushToken, "Your account is active again!");
+      usersRef.doc(currentUser).set(
+        {
+          inactive: false,
+        },
+        { merge: true }
+      );
+    }
+
+  
+  };
+
 
   return (
     <>
@@ -98,34 +130,38 @@ export default function History({ navigation }) {
                         {moment(data.time).fromNow()}
                       </Text>
                       <View style={styles.flex}>
-                      {data.from !== currentUser && data.isReply && (
-                        <Text style={styles.tag}>Someone replied!</Text>
-                      )}
-                      {data.from === currentUser && data.isReply && (
-                        <Text style={styles.tag}>Well said!</Text>
-                      )}
-                      {data.from === currentUser && !data.isReply && (
-                        <Text style={styles.tag}>Waiting for a reply...</Text>
-                      )}
-                      {data.from !== currentUser && !data.isReply && (
-                        <Text style={styles.specialTag}>
-                          Say something back!
-                        </Text>
-                      )}
+                        {/* it was sent to me as a reply */}
+                        {data.to === currentUser && data.isReply && (
+                          <Text style={styles.tag}>Someone replied!</Text>
+                        )}
+                        {/* it was sent from me as a reply */}
+                        {data.from === currentUser && data.isReply && (
+                          <Text style={styles.tag}>Well said!</Text>
+                        )}
+                        {/* it was sent from me to the ether */}
+                        {data.from === currentUser && !data.isReply && (
+                          <Text style={styles.tag}>Waiting for a reply...</Text>
+                        )}
+                        {/* it was sent to me and is waiting for reply */}
+                        {data.to === currentUser && !data.isReply && (
+                          <Text style={styles.specialTag}>
+                            Say something back!
+                          </Text>
+                        )}
 
-                      {data.from === currentUser ? (
-                        <Feather
-                          name="arrow-up-right"
-                          size={30}
-                          color="#E9446A"
-                        />
-                      ) : (
-                        <Feather
-                          name="arrow-down-left"
-                          size={30}
-                          color="#E9446A"
-                        />
-                      )}
+                        {data.from === currentUser ? (
+                          <Feather
+                            name="arrow-up-right"
+                            size={30}
+                            color="#E9446A"
+                          />
+                        ) : (
+                          <Feather
+                            name="arrow-down-left"
+                            size={30}
+                            color="#E9446A"
+                          />
+                        )}
                       </View>
                     </View>
                   </View>
@@ -146,7 +182,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     // alignItems: "center",
-    alignItems: 'baseline'
+    alignItems: "baseline",
   },
   message: { width: 350, marginBottom: -2 },
   historyUnit: {
@@ -164,7 +200,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     marginBottom: 6,
     textAlign: "left",
-    marginRight: 12
+    marginRight: 12,
   },
   specialTag: {
     fontSize: 10,
@@ -175,6 +211,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingTop: 5,
     marginBottom: 6,
-    marginRight: 12
+    marginRight: 12,
   },
 });
