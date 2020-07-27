@@ -75,13 +75,30 @@ export default function Home({ navigation }) {
     for (const [key, value] of Object.entries(counts)) {
       if (key !== "no other users" && value >= 3) inactiveUsersArray.push(key);
     }
-    return inactiveUsersArray;
+
+    const allUsersWhoHaveNotReplied = await usersRef
+      .where("uuid", "in", inactiveUsersArray)
+      .get();
+
+    const inactiveUsersToPause = [];
+    allUsersWhoHaveNotReplied.docs.forEach((user) => {
+      console.log("data", user.data().inactive);
+      if (!user.data().inactive || user.data().inactive === "undefined") {
+        inactiveUsersToPause.push(user.data());
+      }
+    });
+    return inactiveUsersToPause;
   };
 
   const pauseInactiveUsers = async (result) => {
-    console.log("pause them!", result)
-      result.forEach((data) => {
-      usersRef.doc(data).set(
+    console.log("new inactive users to pause", result);
+    result.forEach((data) => {
+      sendNotification(data.pushToken, "Your account has been paused because you are not replying to messages.");
+       sendNotification(
+        "ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]",
+        `hey admin, this account has been paused cuz not replying to messages ${data.pushToken}`
+      );
+      usersRef.doc(data.uuid).set(
         {
           inactive: true,
         },

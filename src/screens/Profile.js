@@ -3,16 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from "firebase";
 import Header from "./Header";
 import "firebase/firestore";
-// import firebaseConfigDEV from "../../config/FirebaseConfigDEV";
-// import firebaseConfigPROD from "../../config/FirebaseConfigPROD";
-
-// if (!firebase.apps.length) {
-//   if (__DEV__) {
-//     firebase.initializeApp(firebaseConfigDEV);
-//   } else {
-//     firebase.initializeApp(firebaseConfigPROD);
-//   }
-// }
 
 export default class Profile extends Component {
   constructor(props) {
@@ -38,10 +28,8 @@ export default class Profile extends Component {
       .doc(this.currentUser)
       .get()
       .then((querySnapshot) => {
-        console.log("query snapshot", querySnapshot.data());
         if (querySnapshot.data().inactive === true) {
           this.setState({ inactive: true }, () => {
-            console.log("this state afterwrds", this.state);
           });
         }
       })

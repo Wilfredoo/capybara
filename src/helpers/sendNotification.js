@@ -8,7 +8,7 @@ const sendNotification = (tokenToSend, messageBody = "default message") => {
     body: JSON.stringify({
       to: tokenToSend,
       sound: "default",
-      title: "Someone sent you a message. Lucky you.",
+      title: "Capynotification!",
       body: messageBody, 
       data: { message: messageBody },
       channelId: "capynotifications"
