@@ -54,6 +54,8 @@ export default function Home({ navigation }) {
       .limit(20)
       .where("isReply", "==", false)
       .where("hasReply", "==", false)
+      .where("forgotten", "==", false)
+      .where("reported", "==", false)
       .where("time", ">", lastWeek)
       .get();
     const snapshotArray = snapshot.docs;
@@ -77,7 +79,8 @@ export default function Home({ navigation }) {
   };
 
   const pauseInactiveUsers = async (result) => {
-    result.forEach((data) => {
+    console.log("pause them!", result)
+      result.forEach((data) => {
       usersRef.doc(data).set(
         {
           inactive: true,
