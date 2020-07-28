@@ -25,12 +25,29 @@ export default function Home({ navigation }) {
   const chatRoomsRef = store.collection("chatRooms");
   const usersRef = store.collection("users");
 
-  const showToast = () => {
+  const showToast = (toastMessage) => {
+    console.log("toast message", toastMessage)
     ToastAndroid.show(
-      "Message sent, maybe someone will reply, maybe not ¯_(ツ)_/¯",
+      toastMessage,
       ToastAndroid.SHORT
     );
   };
+
+const toastMessages = [
+  "Message sent, maybe someone will reply, maybe not ¯_(ツ)_/¯",
+"Is that the best you got?",
+"You are not really the life of the party are you.",
+"Boring. Boring af.",
+"That could make a thousand children yawn.",
+"You dissapointed Capybara. Never dissapoint Capybara."
+
+]
+
+
+
+
+
+
 
   useEffect(() => {
     // getSentMessages().then((result) => {
@@ -90,7 +107,6 @@ export default function Home({ navigation }) {
   };
 
   const pauseInactiveUsers = async (result) => {
-    console.log("pause inactive", result)
     result.forEach((data) => {
       sendNotification(data.pushToken, "Your account has been paused because you are not replying to messages.");
        sendNotification(
@@ -125,7 +141,6 @@ export default function Home({ navigation }) {
     const now = new Date().getTime();
     if (message === "") return setError("empty");
     else if (lastSent !== null && lastSent + pause < now) {
-      console.log("shall just send message again");
     } else if (lastSent !== null) {
       if (message === "") return setError("empty");
       else if (lastSent !== null) return setError("time");
@@ -141,6 +156,7 @@ export default function Home({ navigation }) {
         users = querySnapshot.docs;
         const activeUsersWithoutMe = [];
         users.forEach((data) => {
+          console.log("data", data.data())
           if (data.data().uuid !== currentUser) {
             if (data.data().inactive !== true) {
               activeUsersWithoutMe.push(data.data());
@@ -152,6 +168,8 @@ export default function Home({ navigation }) {
           activeUsersWithoutMe[
             Math.floor(Math.random() * activeUsersWithoutMe.length)
           ];
+          console.log("active users without me", activeUsersWithoutMe)
+          console.log("random uuid", randomUser)
         randomUserID = randomUser.uuid;
         randomUserTOKEN = randomUser.pushToken;
         setProgressing(false);
@@ -169,8 +187,11 @@ export default function Home({ navigation }) {
       "nobody",
       false
     );
+
+
+    const randomToastIndex = await Math.floor(Math.random() * toastMessages.length)
     await setLastSent(new Date().getTime());
-    await showToast();
+    await showToast(toastMessages[ randomToastIndex]);
     await sendNotification(randomUserTOKEN, message);
     await sendNotification(
       "ExponentPushToken[uLlXPHHIqAfrKrknv7QRKd]",

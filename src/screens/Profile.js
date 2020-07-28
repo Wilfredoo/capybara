@@ -52,9 +52,9 @@ export default class Profile extends Component {
           </Text>
           {this.state.inactive && (
             <Text style={{ textAlign: "center", maxWidth: "90%" }}>
-              Your account is inactive so you are no longer receiving messages.
+              Your account is inactive cuz you have 3 or more unreplied messages during the last week. This means that you are no longer receiving messages.
               Reply to some messages to it make active again. You can also
-              forget them if you don't want to reply to them.
+              forget them or report them if you don't want to reply to them.
             </Text>
           )}
           <TouchableOpacity

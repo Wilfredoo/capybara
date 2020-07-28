@@ -55,7 +55,6 @@ export default function History({ navigation }) {
     const sentArray = sentSnapshot.docs;
     const receivedArray = receivedSnapshot.docs;
     receivedArray.forEach(received => {
-      console.log("received", received.data())
       if (!received.data().hasReply && !received.data().isReply) unrepliedReceivedMessages.push(received.data())
     })
 
@@ -81,12 +80,9 @@ export default function History({ navigation }) {
   }
 
   const resumeActivity = async () => {
-    console.log("hells angels")
     const myUserInfo = await usersRef.doc(currentUser).get()
     const myPushToken = await myUserInfo.data().pushToken
-    console.log("myss", myUserInfo.data().inactive)
     if (myUserInfo.data().inactive) {
-      console.log("shhai labeauf")
       sendNotification(myPushToken, "Your account is active again!");
       usersRef.doc(currentUser).set(
         {
